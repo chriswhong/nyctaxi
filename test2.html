@@ -87,6 +87,27 @@ d3.json('http://localhost:3000/trip',function(data){
 
   map.on("viewreset", reset);
   reset();
+var trip = svg.selectAll("path").call(transition);
+
+
+  function transition(trip) {
+    trip.transition()
+        .duration(7500)
+        .attrTween("stroke-dasharray", tweenDash)
+        .each("end", function() { d3.select(this).call(transition); });
+  }
+
+  function tweenDash() {
+    var l = trip.node().getTotalLength();
+    var i = d3.interpolateString("0," + l, l + "," + l); // interpolation of stroke-dasharray style attr
+    return function(t) {
+      //var marker = d3.select("#marker");
+      //var p = path.node().getPointAtLength(t * l);
+      
+      return i(t);
+    }
+  }
+
 
   // Reposition the SVG to cover the features.
   function reset() {
@@ -103,6 +124,12 @@ d3.json('http://localhost:3000/trip',function(data){
 
     feature.attr("d", path);
   }
+
+
+
+
+
+
 });
   // Use Leaflet to implement a D3 geometric transformation.
   function projectPoint(x, y) {
