@@ -3,34 +3,26 @@
 <meta charset="utf-8">
 <title>A day in the life</title>
 <style>
-
-html,body {
-  height:100%;
-  width:100%;
-
-}
-
-body {
-  margin:0;
-}
-
-#map {
-  width: 100%;
-  height: 100%;
-}
-
-svg {
-  position: relative;
-}
-
-path {
-  fill: none;
-stroke: #7878DF;
-stroke-width: 2px;
-}
-
-
-
+    html,
+    body {
+        height: 100%;
+        width: 100%;
+    }
+    body {
+        margin: 0;
+    }
+    #map {
+        width: 100%;
+        height: 100%;
+    }
+    svg {
+        position: relative;
+    }
+    path {
+        fill: none;
+        stroke: #7878DF;
+        stroke-width: 2px;
+    }
 </style>
 
 
@@ -42,100 +34,120 @@ stroke-width: 2px;
 
 <script src="http://d3js.org/d3.v3.min.js"></script>
 <script src="http://cdnjs.cloudflare.com/ajax/libs/leaflet/0.7.2/leaflet.js"></script>
- <script src="http://maps.google.com/maps/api/js?libraries=geometry&sensor=false"></script>
- <script src='https://api.tiles.mapbox.com/mapbox.js/v1.6.4/mapbox.js'></script>
- <link href='https://api.tiles.mapbox.com/mapbox.js/v1.6.4/mapbox.css' rel='stylesheet' />
+<script src="http://maps.google.com/maps/api/js?libraries=geometry&sensor=false"></script>
+<script src='https://api.tiles.mapbox.com/mapbox.js/v1.6.4/mapbox.js'></script>
+<link href='https://api.tiles.mapbox.com/mapbox.js/v1.6.4/mapbox.css' rel='stylesheet' />
 <script>
+    var mapboxTiles = L.tileLayer('https://{s}.tiles.mapbox.com/v3/cwhong.map-hziyh867/{z}/{x}/{y}.png', {
+        attribution: '<a href="http://www.mapbox.com/about/maps/" target="_blank">Terms &amp; Feedback</a>'
+    });
 
-
-  
-
-var mapboxTiles = L.tileLayer('https://{s}.tiles.mapbox.com/v3/cwhong.map-hziyh867/{z}/{x}/{y}.png', {
-    attribution: '<a href="http://www.mapbox.com/about/maps/" target="_blank">Terms &amp; Feedback</a>'
-});
-
-var map = L.map('map')
-    .addLayer(mapboxTiles)
-    .setView([40.7127, -74.0059], 11);
+    var map = L.map('map')
+        .addLayer(mapboxTiles)
+        .setView([40.7127, -74.0059], 13);
 
 
 
 
-var svg = d3.select(map.getPanes().overlayPane).append("svg"),
-    g = svg.append("g").attr("class", "leaflet-zoom-hide");
+    var svg = d3.select(map.getPanes().overlayPane).append("svg"),
+        g = svg.append("g").attr("class", "leaflet-zoom-hide");
 
 
 
-  var transform = d3.geo.transform({point: projectPoint}),
-      path = d3.geo.path().projection(transform);
+    var transform = d3.geo.transform({
+            point: projectPoint
+        }),
+        d3path = d3.geo.path().projection(transform);
 
 
-d3.json('http://localhost:3000/trip',function(data){
-  console.log(data);
+    d3.json('http://localhost:3000/trip', function (data) {
+        console.log(data);
+
+        var feature = g.selectAll("path")
+            .data(data.features)
+            .enter().append("path")
+            .attr("class", function (d) {
+
+                if (d.properties.hasfare == true) {
+                    return "trip" + (d.properties.key * 2) + " " + d.properties.hasfare;
+                } else {
+                    return "trip" + ((d.properties.key * 2) + 1) + " " + d.properties.hasfare;
+                }
+            })
+            .attr("style", "opacity:0");
+        //.attr("style","opacity:0");
 
 
-    var feature = g.selectAll("path")
-      .data(data.features)
-      .enter().append("path");
+
+
+        //var string = JSON.stringify(j);
+        //console.log(string);
+
+        map.on("viewreset", reset);
+        reset();
+
+        var i = 0;
+
+        function iterate() {
+
+
+        var path = svg.select("path.trip" + i)
+                .attr("style", "opacity:1")
+                .call(transition);
 
 
 
 
+        function transition(path) {
+            path.transition()
+                .duration(1500)
+                .attrTween("stroke-dasharray", tweenDash)
+                .each("end", function () {
+                    i++;
+                    iterate();
+                });
 
-//var string = JSON.stringify(j);
-//console.log(string);
+        }
 
-  map.on("viewreset", reset);
-  reset();
-var trip = svg.selectAll("path").call(transition);
+        function tweenDash() {
+           
+            var l = path.node().getTotalLength();
+            var i = d3.interpolateString("0," + l, l + "," + l); // interpolation of stroke-dasharray style attr
+            return function (t) {
+                //var marker = d3.select("#marker");
+                //var p = path.node().getPointAtLength(t * l);
+
+                return i(t);
+            }
+        }
+
+        }
+        
+        iterate();
+
+        // Reposition the SVG to cover the features.
+        function reset() {
+            var bounds = d3path.bounds(data),
+                topLeft = bounds[0],
+                bottomRight = bounds[1];
+
+            svg.attr("width", bottomRight[0] - topLeft[0])
+                .attr("height", bottomRight[1] - topLeft[1])
+                .style("left", topLeft[0] + "px")
+                .style("top", topLeft[1] + "px");
+
+            g.attr("transform", "translate(" + -topLeft[0] + "," + -topLeft[1] + ")");
+
+            feature.attr("d", d3path);
+        }
 
 
-  function transition(trip) {
-    trip.transition()
-        .duration(7500)
-        .attrTween("stroke-dasharray", tweenDash)
-        .each("end", function() { d3.select(this).call(transition); });
-  }
 
-  function tweenDash() {
-    var l = trip.node().getTotalLength();
-    var i = d3.interpolateString("0," + l, l + "," + l); // interpolation of stroke-dasharray style attr
-    return function(t) {
-      //var marker = d3.select("#marker");
-      //var p = path.node().getPointAtLength(t * l);
-      
-      return i(t);
+
+    });
+    // Use Leaflet to implement a D3 geometric transformation.
+    function projectPoint(x, y) {
+        var point = map.latLngToLayerPoint(new L.LatLng(y, x));
+        this.stream.point(point.x, point.y);
     }
-  }
-
-
-  // Reposition the SVG to cover the features.
-  function reset() {
-    var bounds = path.bounds(data),
-        topLeft = bounds[0],
-        bottomRight = bounds[1];
-
-    svg .attr("width", bottomRight[0] - topLeft[0])
-        .attr("height", bottomRight[1] - topLeft[1])
-        .style("left", topLeft[0] + "px")
-        .style("top", topLeft[1] + "px");
-
-    g   .attr("transform", "translate(" + -topLeft[0] + "," + -topLeft[1] + ")");
-
-    feature.attr("d", path);
-  }
-
-
-
-
-
-
-});
-  // Use Leaflet to implement a D3 geometric transformation.
-  function projectPoint(x, y) {
-    var point = map.latLngToLayerPoint(new L.LatLng(y, x));
-    this.stream.point(point.x, point.y);
-  }
-
-
 </script>
