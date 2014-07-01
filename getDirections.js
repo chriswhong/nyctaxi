@@ -48,7 +48,7 @@ csv
                     j = 4;
                 } else {
                     //each trip except the last should know when the pickup time of the next trip is
-                    d.nextPickupTime = rawData[key + 1].pickuptime;
+                    d.nextpickuptime = rawData[key + 1].pickuptime;
                 };
 
 
@@ -118,8 +118,8 @@ function apiCall(call,index) {
                         //console.log(legs[(j*2)]);
                         var d = rawData[key];
                         d.key = key;
-                        d.tripPolyline = getPolyline(legs[(j*2)]);
-                        d.nextPolyline = getPolyline(legs[(j*2)+1]);
+                        d.trippolyline = getPolyline(legs[(j*2)]);
+                        d.nextpolyline = getPolyline(legs[(j*2)+1]);
 
                         console.log(d);  //now write to csv?
                         outputArray.push(d);

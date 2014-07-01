@@ -27,8 +27,8 @@ csv
 
 
 for(var i=0;i<rawData.length;i++) {
-    coordinates = rawData[i].tripPolyline;
-    coordinates2 = rawData[i].nextPolyline;
+    coordinates = rawData[i].trippolyline;
+    coordinates2 = rawData[i].nextpolyline;
     coordinates = polyline.decode(coordinates);
     coordinates2 = polyline.decode(coordinates2);
 
@@ -63,20 +63,24 @@ for(var i=0;i<rawData.length;i++) {
     feature.properties.key = rawData[i].key;
     feature.properties.hasfare = true;
 
+    console.log(rawData[i]);
+
+    feature2.properties.pickuptime = rawData[i].dropofftime;
+    feature2.properties.dropofftime = rawData[i].nextpickuptime;
     feature2.properties.key = rawData[i].key;
     feature2.properties.hasfare = false;
 
    
 
     for(var j=0;j<coordinates.length;j++){
-      console.log("Coordinates " + coordinates[j]);
+      //console.log("Coordinates " + coordinates[j]);
       var coord = [coordinates[j][1],coordinates[j][0]]
       //create a feature
       feature.geometry.coordinates.push(coord);
     };
 
     for(var j=0;j<coordinates2.length;j++){
-      console.log("Coordinates " + coordinates2[j]);
+      //console.log("Coordinates " + coordinates2[j]);
       var coord = [coordinates2[j][1],coordinates2[j][0]]
       //create a feature
       feature2.geometry.coordinates.push(coord);

@@ -20,8 +20,11 @@ function ready(error, xml) {
 
   //Get path start point for placing marker
   function pathStartPoint(path) {
-    var d = path.attr("d"),
-    dsplitted = d.split(" ");
+    var d = path.attr("d").toString();
+    console.log(d);
+    var dsplitted = d.split("");
+    console.log(dsplitted);
+
     return dsplitted[1];
   }
 

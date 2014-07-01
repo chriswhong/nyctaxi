@@ -20,8 +20,19 @@
     }
     path {
         fill: none;
-        stroke: #7878DF;
         stroke-width: 2px;
+    }
+
+    path.true {
+        stroke:#3366FF;
+    }
+
+    path.false {
+        stroke:#990099;
+    }
+
+    circle {
+        fill: yellow;
     }
 </style>
 
@@ -38,13 +49,15 @@
 <script src='https://api.tiles.mapbox.com/mapbox.js/v1.6.4/mapbox.js'></script>
 <link href='https://api.tiles.mapbox.com/mapbox.js/v1.6.4/mapbox.css' rel='stylesheet' />
 <script>
+    var timeFactor = 5; //number of minutes in real life to a second in the viz
+
     var mapboxTiles = L.tileLayer('https://{s}.tiles.mapbox.com/v3/cwhong.map-hziyh867/{z}/{x}/{y}.png', {
         attribution: '<a href="http://www.mapbox.com/about/maps/" target="_blank">Terms &amp; Feedback</a>'
     });
 
     var map = L.map('map')
         .addLayer(mapboxTiles)
-        .setView([40.7127, -74.0059], 13);
+        .setView([40.7127, -74.0059], 12);
 
 
 
@@ -77,7 +90,15 @@
             .attr("style", "opacity:0");
         //.attr("style","opacity:0");
 
+            
 
+              var marker = g.append("circle");
+              marker.attr("r", 3)
+                .attr("id", "marker");
+                //.attr("transform", "translate(" + startPoint + ")");
+
+              //Get path start point for placing marker
+              
 
 
         //var string = JSON.stringify(j);
@@ -92,15 +113,38 @@
 
 
         var path = svg.select("path.trip" + i)
-                .attr("style", "opacity:1")
+                .attr("style", "opacity:.7")
                 .call(transition);
 
 
 
+            function pathStartPoint(path) {
+                var d = path.attr('d');
+                console.log(d);
+                dsplitted = d.split("L")[0].slice(1);
+                console.log(dsplitted);
+                return dsplitted;
+              }
+            var startPoint = pathStartPoint(path);
+            marker.attr("transform", "translate(" + startPoint + ")");
+            
 
         function transition(path) {
             path.transition()
-                .duration(1500)
+                .duration(function(d){
+                    //calculate seconds
+                    var start = Date.parse(d.properties.pickuptime),
+                    finish = Date.parse(d.properties.dropofftime),
+                    duration = finish - start;
+
+                    duration = duration/60000; //convert to minutes
+
+                    duration = duration * (1/timeFactor) * 1000;
+
+                    console.log(duration);
+
+                    return (duration);
+                })
                 .attrTween("stroke-dasharray", tweenDash)
                 .each("end", function () {
                     i++;
@@ -114,9 +158,11 @@
             var l = path.node().getTotalLength();
             var i = d3.interpolateString("0," + l, l + "," + l); // interpolation of stroke-dasharray style attr
             return function (t) {
-                //var marker = d3.select("#marker");
-                //var p = path.node().getPointAtLength(t * l);
-
+                var marker = d3.select("#marker");
+                var p = path.node().getPointAtLength(t * l);
+                marker.attr("transform", "translate(" + p.x + "," + p.y + ")");//move marker
+                var newCenter = map.layerPointToLatLng(new L.Point(p.x,p.y));
+                map.setView(newCenter, 12);
                 return i(t);
             }
         }
