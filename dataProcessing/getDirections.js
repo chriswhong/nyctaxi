@@ -183,7 +183,7 @@ function writeToFile() {
                         });
 
                         
-                            var ws = fs.createWriteStream("output.csv");
+                            var ws = fs.createWriteStream("output100.csv");
                             csv
                                .write(outputArray, {headers: true})
                                .pipe(ws);

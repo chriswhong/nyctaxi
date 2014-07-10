@@ -1,0 +1,70 @@
+ html,
+    body {
+        height: 100%;
+        width: 100%;
+    }
+    body {
+        margin: 0;
+    }
+    #map {
+        width: 100%;
+        height: 100%;
+    }
+    svg {
+        position: relative;
+    }
+    path {
+        fill: none;
+        stroke-width: 4px;
+    }
+
+    path.true {
+        stroke:#3366FF;
+    }
+
+    path.false {
+        stroke:#990099;
+    }
+
+    circle {
+        fill: yellow;
+    }
+
+    #timebox {
+        position:absolute;
+        height:200px;
+        width:300px;
+        top:0;
+        left:0;
+        z-index:10;
+        background:#000;
+        color:white;
+        margin:30px;
+        padding:30px;
+    }
+
+    .areaChart {
+        position: absolute;
+        bottom: 0;
+        background: #000;
+    }
+
+    .axis path,
+    .axis line {
+          fill: none;
+          stroke: #FFF;
+          shape-rendering: crispEdges;
+          stroke-width:1;
+    }
+
+    .axis text {
+      stroke:white;
+    }
+
+    .area {
+      fill: #3366FF;
+    }
+
+    .empty {
+        fill: #990099;
+    }
