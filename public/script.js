@@ -1,100 +1,4 @@
-<!DOCTYPE html>
-<html>
-<meta charset="utf-8">
-<title>A day in the life</title>
-<style>
-    html,
-    body {
-        height: 100%;
-        width: 100%;
-    }
-    body {
-        margin: 0;
-    }
-    #map {
-        width: 100%;
-        height: 100%;
-    }
-    svg {
-        position: relative;
-    }
-    path {
-        fill: none;
-        stroke-width: 4px;
-    }
-
-    path.true {
-        stroke:#3366FF;
-    }
-
-    path.false {
-        stroke:#990099;
-    }
-
-    circle {
-        fill: yellow;
-    }
-
-    #timebox {
-        position:absolute;
-        height:200px;
-        width:300px;
-        top:0;
-        left:0;
-        z-index:10;
-        background:#000;
-        color:white;
-        margin:30px;
-        padding:30px;
-    }
-
-    .areaChart {
-        position: absolute;
-        bottom: 0;
-        background: #000;
-    }
-
-    .axis path,
-    .axis line {
-          fill: none;
-          stroke: #FFF;
-          shape-rendering: crispEdges;
-          stroke-width:1;
-    }
-
-    .axis text {
-      stroke:white;
-    }
-
-    .area {
-      fill: #3366FF;
-    }
-
-    .empty {
-        fill: #990099;
-    }
-
-</style>
-
-
-
-
-<div id="map">
-</div>
-<div id="timebox">
-    Time: <span class = "time">Test</span> <br/>
-    $: <span class = "runningFare">Test</span>
-
-</div>
-<script src="moment.js"></script>
-<script src="//ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
-<script src="http://d3js.org/d3.v3.min.js"></script>
-
-<script src="http://maps.google.com/maps/api/js?libraries=geometry&sensor=false"></script>
-<script src='https://api.tiles.mapbox.com/mapbox.js/v1.6.4/mapbox.js'></script>
-<link href='https://api.tiles.mapbox.com/mapbox.js/v1.6.4/mapbox.css' rel='stylesheet' />
-<script>
-    var timeFactor = 10; //number of minutes in real life to a second in the viz
+ var timeFactor = 5; //number of minutes in real life to a second in the viz
     var tweenToggle = 0;
     var mapboxTiles = L.tileLayer('https://{s}.tiles.mapbox.com/v3/cwhong.map-hziyh867/{z}/{x}/{y}.png', {
         attribution: '<a href="http://www.mapbox.com/about/maps/" target="_blank">Terms &amp; Feedback</a>'
@@ -322,7 +226,7 @@ var dummyData = [];
 
 
                         var decimalHour = parseInt(time.format('H')) + parseFloat(time.format('m')/60)
-                        console.log(d);
+                        //console.log(d);
 
 
 
@@ -331,18 +235,18 @@ var dummyData = [];
                         }
 
                         var incrementalFare = d.properties.fare*t;
-                        console.log(runningFare + " " + incrementalFare + " " + decimalHour); 
+                        //console.log(runningFare + " " + incrementalFare + " " + decimalHour); 
                 
-                        if(d.properties.hasfare == true){
+                        
                            dummyData.push({
                             "time": decimalHour,
                             "runningFare": runningFare + parseFloat(incrementalFare)
                         });
 
-                        console.log(dummyData);
+                        //console.log(dummyData);
 
                         chartPath.attr("d", area); 
-                        } else {
+                        if(d.properties.hasfare == false) {
                             emptyData.push({
                             "time": decimalHour,
                             "runningFare": runningFare + parseFloat(incrementalFare)
@@ -393,4 +297,3 @@ var dummyData = [];
         var point = map.latLngToLayerPoint(new L.LatLng(y, x));
         this.stream.point(point.x, point.y);
     }
-</script>
