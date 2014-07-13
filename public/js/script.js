@@ -5,6 +5,8 @@ var mapboxTiles = L.tileLayer('https://{s}.tiles.mapbox.com/v3/cwhong.map-hziyh8
     attribution: '<a href="http://www.mapbox.com/about/maps/" target="_blank">Terms &amp; Feedback</a>'
 });
 
+var topLeft,bottomRight;
+
 var time = moment();
 var map = L.map('map',{ zoomControl:false })
 .addLayer(mapboxTiles)
@@ -62,11 +64,11 @@ var areaChartSvg = d3.select(".areaChartBox").append("svg")
 .attr("transform", "translate(" + margin.left + "," + margin.top + ")");
 
 var markerLine = areaChartSvg.append('line')
-    .attr('x1', 0)
-    .attr('y1', 0)
-    .attr('x2', 0) 
-    .attr('y2', areaChartHeight )
-    .attr("class","markerLine");
+.attr('x1', 0)
+.attr('y1', 0)
+.attr('x2', 0) 
+.attr('y2', areaChartHeight )
+.attr("class","markerLine");
 
 var dummyData = [];
 
@@ -111,7 +113,7 @@ $('.slower').click(function(){
     if(timeFactor > 1){
         timeFactor -= 1;  
     };
-    
+
     $('.timeFactor').html(timeFactor);
 
 });
@@ -158,6 +160,12 @@ d3.json('http://localhost:3000/trip', function (data) {
         }
     })
     .attr("style", "opacity:0");
+
+    var pointsArray = [[-74.0059,40.7127,true ]];
+    g.selectAll(".point")
+    .data(pointsArray);
+
+
 //.attr("style","opacity:0");
 
 
@@ -200,51 +208,78 @@ function iterate() {
     function pathStartPoint(path) {
         var d = path.attr('d');
 
-        dsplitted = d.split("L")[0].slice(1);
+        dsplitted = d.split("L")[0].slice(1).split(",");
+        var point = []
+        point[0]=parseInt(dsplitted[0]);
+        point[1]=parseInt(dsplitted[1]);
 
-        return dsplitted;
+        return point;
     }
 
 
     var startPoint = pathStartPoint(path);
-    marker.attr("transform", "translate(" + startPoint + ")");
-    
-    path.each(function(d){
-       g.append("circle")
-        .attr("r", 5)
-        .attr('class',function(){
+    marker.attr("transform", "translate(" + startPoint[0] + "," + startPoint[1] + ")");
 
-           if(d.properties.hasfare) {
-             return 'startPoint';
-           } else {
-             return 'endPoint';
-           }
-        })
-        .attr("transform", "translate(" + startPoint + ")");
+//console.log(startPoint);
 
-        if(d.properties.hasfare) {
-            marker
-            .transition()
-            .duration(500)
-            .attr("r",5)
-            .attr('style','opacity:1');
-        } else {
+path.each(function(d){
 
-            marker
-            .transition()
-            .duration(500)
-            .attr("r",40)
-            .attr('style','opacity:.3');
+//add the translation of the map's g element
+startPoint[0] = startPoint[0]; //+ topLeft[0];
+startPoint[1] = startPoint[1]; //+ topLeft[1];
+var newLatLon = coordToLatLon(startPoint);
+pointsArray.push([newLatLon.lng,newLatLon.lat,d.properties.hasfare]);
+//console.log(pointsArray);
 
-        }
-    });
+console.log(pointsArray);
 
-    
+var points = g.selectAll(".point")
+.data(pointsArray)
+.enter()
+.append('circle')
+.attr("r",6)
+.attr("class",function(d){
+    console.log(d);
+    if(d[2]) {
+        return "startPoint point";
+    } else {
+        return "endPoint point";
+    }
+})
+.attr("transform",function(d){
+    return translatePoint(d);  
+});
+
+if(d.properties.hasfare) { //transition marker to show full taxi
+    marker
+    .transition()
+    .duration(500)
+    .attr("r",5)
+    .attr('style','opacity:1');
 
 
-    function transition(path) {
-        path.transition()
-        .duration(function(d){
+
+
+
+
+
+} else { //Transition marker to show empty taxi
+
+    marker
+    .transition()
+    .duration(500)
+    .attr("r",40)
+    .attr('style','opacity:.3');
+
+}
+});
+
+
+
+
+function transition(path) {
+    path.transition()
+    .duration(function(d){
 //calculate seconds
 var start = Date.parse(d.properties.pickuptime),
 finish = Date.parse(d.properties.dropofftime),
@@ -264,47 +299,47 @@ $('.readableTime').text(time.format('h:mm a'));
 
 return (duration);
 })
-        .attrTween("stroke-dasharray", tweenDash)
-        .each("end", function (d) {
+    .attrTween("stroke-dasharray", tweenDash)
+    .each("end", function (d) {
 
-if(d.properties.hasfare) {
-   
-    running.fare += parseFloat(d.properties.fare);
-    running.surcharge += parseFloat(d.properties.surcharge);
-    running.mtatax += parseFloat(d.properties.mtatax);
-    running.tip += parseFloat(d.properties.tip);
-    running.tolls += parseFloat(d.properties.tolls);
-    running.total += parseFloat(d.properties.total);
-    running.passengers += parseFloat(d.properties.passengers);
+        if(d.properties.hasfare) {
 
-    
+            running.fare += parseFloat(d.properties.fare);
+            running.surcharge += parseFloat(d.properties.surcharge);
+            running.mtatax += parseFloat(d.properties.mtatax);
+            running.tip += parseFloat(d.properties.tip);
+            running.tolls += parseFloat(d.properties.tolls);
+            running.total += parseFloat(d.properties.total);
+            running.passengers += parseFloat(d.properties.passengers);
 
-     for(var p = 0;p<d.properties.passengers;p++){
-        $('.passengerGlyphs').append('<span class="glyphicon glyphicon-user"></span>');
-    }
 
-    updateRunning();
 
-    
+            for(var p = 0;p<d.properties.passengers;p++){
+                $('.passengerGlyphs').append('<span class="glyphicon glyphicon-user"></span>');
+            }
 
-};
-i++;
+            updateRunning();
 
-var nextPath = svg.select("path.trip" + i);
-if (nextPath[0][0]==null){
-    clearTimeout(timer);
-} else {
-   iterate(); 
+
+
+        };
+        i++;
+
+        var nextPath = svg.select("path.trip" + i);
+        if (nextPath[0][0]==null){
+            clearTimeout(timer);
+        } else {
+            iterate(); 
+        }
+
+
+    });
+
 }
 
+function tweenDash(d) {
 
-});
-
-    }
-
-    function tweenDash(d) {
-
-        var l = path.node().getTotalLength();
+    var l = path.node().getTotalLength();
 var i = d3.interpolateString("0," + l, l + "," + l); // interpolation of stroke-dasharray style attr
 return function (t) {
     var marker = d3.select("#marker");
@@ -316,7 +351,7 @@ if (tweenToggle == 0) {
     tweenToggle = 1;
     var newCenter = map.layerPointToLatLng(new L.Point(p.x,p.y));
 
-map.panTo(newCenter, 14);
+    map.panTo(newCenter, 14);
 } else {
     tweenToggle = 0;
 }
@@ -334,17 +369,17 @@ if(chartInterval == 5){
 
 
 
-if(isNaN(d.properties.fare)){
-    d.properties.fare = 0; 
-}
+    if(isNaN(d.properties.fare)){
+        d.properties.fare = 0; 
+    }
 
-var incrementalFare = d.properties.fare*t;
+    var incrementalFare = d.properties.fare*t;
 
 
-dummyData.push({
-    "time": decimalHour,
-    "runningFare": running.fare + parseFloat(incrementalFare)
-});
+    dummyData.push({
+        "time": decimalHour,
+        "runningFare": running.fare + parseFloat(incrementalFare)
+    });
 
 
 chartPath.attr("d", area); //redraw area chart
@@ -358,9 +393,9 @@ if(d.properties.hasfare == false) { //draw purple area for nonfare time
 }
 
 markerLine
- .attr('x1', x(decimalHour))
- .attr('x2', x(decimalHour));
-    
+.attr('x1', x(decimalHour))
+.attr('x2', x(decimalHour));
+
 
 
 
@@ -400,7 +435,7 @@ function updateRunning() {
 
 // Reposition the SVG to cover the features.
 function reset() {
-    var bounds = d3path.bounds(data),
+    var bounds = d3path.bounds(data);
     topLeft = bounds[0],
     bottomRight = bounds[1];
 
@@ -412,6 +447,12 @@ function reset() {
     g.attr("transform", "translate(" + (-topLeft[0]+50) + "," + (-topLeft[1]+50)+ ")");
 
     feature.attr("d", d3path);
+
+//points.attr("transform",function(d){
+//return translatePoint(d);
+//});
+
+
 }
 
 
@@ -423,3 +464,17 @@ function projectPoint(x, y) {
     var point = map.latLngToLayerPoint(new L.LatLng(y, x));
     this.stream.point(point.x, point.y);
 }
+
+function translatePoint(d) {
+    var point = map.latLngToLayerPoint(new L.LatLng(d[1],d[0]));  
+
+    return "translate(" + point.x + "," + point.y + ")";
+}
+
+function coordToLatLon(coord) {
+//console.log(coord[0] + " " + coord[1]);
+var point = map.layerPointToLatLng(new L.Point(coord[0],coord[1]));
+//console.log(point);
+return point;
+}
+
