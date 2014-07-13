@@ -143,7 +143,7 @@ function updateTimer() {
 
 
 
-d3.json('http://localhost:3000/trip', function (data) {
+d3.json('/trip', function (data) {
 
 
 
