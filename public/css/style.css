@@ -1,0 +1,151 @@
+ html,
+    body {
+        height: 100%;
+        width: 100%;
+    }
+    body {
+        margin: 0;
+    }
+    #map {
+
+        top: 50px;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        position: absolute;
+        width: auto;
+        height: auto;
+    }
+    svg {
+        position: relative;
+    }
+    path {
+        fill: none;
+        stroke-width: 4px;
+    }
+
+    path.true {
+        stroke:#3366FF;
+    }
+
+    path.false {
+        stroke:#990099;
+        display:none;
+    }
+
+    #marker {
+        fill: yellow;
+    }
+
+    #timebox {
+        position: absolute;
+        top: 15px;
+        left: 15px;
+        width: 300px;
+        color: #fff;
+        padding: 10px;
+        box-sizing: border-box;
+    }
+
+    .areaChart {
+        position: absolute;
+        bottom: 15px;
+    }
+
+    .axis path,
+    .axis line {
+          fill: none;
+          stroke: #FFF;
+          shape-rendering: crispEdges;
+          stroke-width:1;
+    }
+
+    .axis text {
+      stroke:white;
+    }
+
+    .area {
+      fill: #3366FF;
+    }
+
+    .empty {
+        fill: #990099;
+    }
+
+
+    .navbar-inverse {
+        background-color:#FFFF2D;
+    }
+
+    .overlay {
+        position: relative;
+        top: 50%;
+        bottom: 0;
+        height: auto;
+        -webkit-transform: translateY(-50%);
+        -ms-transform: translateY(-50%);
+        transform: translateY(-50%);
+ 
+    }
+
+    .overlay2 {
+
+          top: 50px;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        position: absolute;
+        width: auto;
+        height: auto;
+        display:none;
+
+
+    }
+
+    .bottomChart {
+        position: absolute;
+        bottom:15px;
+        right:15px;
+        left:15px;
+        width:auto;
+        height:140px;
+        border-radius: 6px;
+        background: #090808;
+        opacity: .8;
+    }
+
+    .dateTimeContainer {
+        position: absolute;
+        top: 15px;
+        left: 15px;
+        width: 300px;
+        height: 95px;
+        border-radius: 6px;
+        background: #090808;
+        opacity: .8;
+    
+    }
+
+    .startPoint {
+        fill:green;
+    }
+
+    .endPoint {
+        fill:red;
+    }
+
+    .time {
+
+        font-size: 3em;
+    }
+
+    .readableTime {
+        position: relative;
+        top: -5px;
+    }
+
+
+    .date {
+        font-size: 18px;
+    }
+
