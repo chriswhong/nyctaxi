@@ -237,7 +237,7 @@ points = g.selectAll(".point")
 .data(pointsArray)
 .enter()
 .append('circle')
-.attr("r",6)
+.attr("r",5)
 .attr("class",function(d){
     console.log(d);
     if(d[2]) {
