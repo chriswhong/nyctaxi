@@ -161,8 +161,8 @@ d3.json('http://localhost:3000/trip', function (data) {
     })
     .attr("style", "opacity:0");
 
-    var pointsArray = [[-74.0059,40.7127,true ]];
-    g.selectAll(".point")
+    var pointsArray = [];
+    var points = g.selectAll(".point")
     .data(pointsArray);
 
 
@@ -233,7 +233,7 @@ pointsArray.push([newLatLon.lng,newLatLon.lat,d.properties.hasfare]);
 
 console.log(pointsArray);
 
-var points = g.selectAll(".point")
+points = g.selectAll(".point")
 .data(pointsArray)
 .enter()
 .append('circle')
@@ -278,26 +278,29 @@ if(d.properties.hasfare) { //transition marker to show full taxi
 
 
 function transition(path) {
+
+    g.selectAll
+
     path.transition()
     .duration(function(d){
-//calculate seconds
-var start = Date.parse(d.properties.pickuptime),
-finish = Date.parse(d.properties.dropofftime),
-duration = finish - start;
+        //calculate seconds
+        var start = Date.parse(d.properties.pickuptime),
+        finish = Date.parse(d.properties.dropofftime),
+        duration = finish - start;
 
-duration = duration/60000; //convert to minutes
+        duration = duration/60000; //convert to minutes
 
-duration = duration * (1/timeFactor) * 1000;
-
-
-time = moment(d.properties.pickuptime.toString());
+        duration = duration * (1/timeFactor) * 1000;
 
 
+        time = moment(d.properties.pickuptime.toString());
 
-$('.readableTime').text(time.format('h:mm a'));
 
 
-return (duration);
+        $('.readableTime').text(time.format('h:mm a'));
+
+
+        return (duration);
 })
     .attrTween("stroke-dasharray", tweenDash)
     .each("end", function (d) {
@@ -448,9 +451,12 @@ function reset() {
 
     feature.attr("d", d3path);
 
-//points.attr("transform",function(d){
-//return translatePoint(d);
-//});
+    //TODO: Figure out why this doesn't work as points.attr...
+    g.selectAll(".point")
+    .attr("transform",function(d){
+        console.log(d);
+        return translatePoint(d);
+    });
 
 
 }
