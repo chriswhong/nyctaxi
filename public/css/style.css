@@ -5,6 +5,7 @@
     }
     body {
         margin: 0;
+        color:#fff;
     }
     #map {
 
@@ -37,16 +38,7 @@
         fill: yellow;
     }
 
-    #timebox {
-        position: absolute;
-        top: 15px;
-        left: 15px;
-        width: 300px;
-        color: #fff;
-        padding: 10px;
-        box-sizing: border-box;
-    }
-
+   
     .areaChart {
         position: absolute;
         bottom: 15px;
@@ -69,7 +61,7 @@
     }
 
     .empty {
-        fill: #990099;
+        fill: rgba(165, 165, 70, 1);
     }
 
 
@@ -85,6 +77,7 @@
         -webkit-transform: translateY(-50%);
         -ms-transform: translateY(-50%);
         transform: translateY(-50%);
+        color:#333333;
  
     }
 
@@ -102,36 +95,59 @@
 
     }
 
-    .bottomChart {
+    .areaChartBox {
         position: absolute;
         bottom:15px;
         right:15px;
         left:15px;
         width:auto;
         height:140px;
-        border-radius: 6px;
-        background: #090808;
-        opacity: .8;
     }
 
-    .dateTimeContainer {
+    .dateTimeBox {
         position: absolute;
-        top: 15px;
+        top: 65px;
         left: 15px;
-        width: 300px;
-        height: 95px;
+        width: 300px;  
+    }
+
+    .totalsBox {
+        position: absolute;
+        top: 65px;
+        right: 15px;
+        width: 300px;  
+    }
+
+    .totalsBox p {
+        font-size: 20px;
+        margin-bottom: 0;
+    }
+
+    .running {
+        float:right;
+    }
+
+    .tolls {
+        border-bottom: 1px solid #fff;
+    }
+
+    .box {
+        background:rgba(0, 0, 0, 0.61);
+        padding: 10px;
+        box-sizing: border-box;
         border-radius: 6px;
-        background: #090808;
-        opacity: .8;
-    
+    }
+
+    .boxHeader {
+        font-size:2em;
     }
 
     .startPoint {
-        fill:green;
+        fill:rgba(84, 255, 84, 0.64);
     }
 
     .endPoint {
-        fill:red;
+        fill:rgba(219, 62, 62, 0.79);
     }
 
     .time {
@@ -149,3 +165,27 @@
         font-size: 18px;
     }
 
+    .passengerGlyphs .glyphicon {
+        margin-right: 2px;
+    }
+
+    .passengerGlyphs {
+        width: 170px;
+        margin: 0 auto;
+    }
+
+    .markerLine {
+        stroke:yellow;
+    }
+
+    .navbar-inverse .navbar-brand {
+        color: #333;
+    }
+
+    .navbar-inverse .navbar-brand:hover, .navbar-inverse .navbar-brand:focus {
+        color: #000;
+    }
+
+    .navbar-inverse .navbar-nav>li>a:hover, .navbar-inverse .navbar-nav>li>a:focus {
+        color: #000;
+    }

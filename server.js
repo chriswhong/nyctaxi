@@ -104,7 +104,8 @@ function createGeojson(rawData,callback){
     feature.properties.fare = rawData[i].fare;
     feature.properties.paymenttype = rawData[i].paymenttype;
     feature.properties.surcharge = rawData[i].surcharge;
-    feature.properties.mtatax = rawData[i].tip;
+    feature.properties.mtatax = rawData[i].mtatax;
+    feature.properties.tip = rawData[i].tip;
     feature.properties.tolls = rawData[i].tolls;
     feature.properties.total = rawData[i].total;
     feature.properties.pickuptime = rawData[i].pickuptime;
