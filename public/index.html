@@ -3,23 +3,75 @@
     <head>
         <meta charset="utf-8">
         <title>A Day in the Life</title>
-        <link rel="stylesheet" type="text/css" href="style.css">
+        
         <link rel='stylesheet' href='https://api.tiles.mapbox.com/mapbox.js/v1.6.4/mapbox.css'  />
-
+        <link href="css/bootstrap.min.css" rel="stylesheet">
+        <link rel="stylesheet" type="text/css" href="css/style.css">
 
     </head>
     <body>
+        <div class="navbar navbar-inverse navbar-fixed-top" role="navigation">
+      <div class="container">
+
+        <div class="navbar-header">
+          <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
+            <span class="sr-only">Toggle navigation</span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+          </button>
+          <a class="navbar-brand" href="#"><span class="glyphicon glyphicon-road    "></span> NYC Taxis: A Day in the Life</a>
+        </div>
+        <div class="collapse navbar-collapse">
+          <ul class="nav navbar-nav">
+            <li><a href="#about">About</a></li>
+            
+          </ul>
+        </div><!--/.nav-collapse -->
+
+
+
+      </div>
+    </div>
         <div id="map">
         </div>
-        <div id="timebox">
-            Time: <span class = "time">Test</span> <br/>
-            $: <span class = "runningFare">Test</span>
+        <div class="container overlay">
+            <div class="jumbotron">
+              <h1>NYC Taxi: A Day in the Life</h1>
+              <p>This visualization displays the data for one random NYC yellow taxi on a single day in 2013.  See where it operated, how much money it made, and how busy it was over 24 hours.</p>
+              <p class = 'text-center'><a id = "begin" class="btn btn-primary btn-lg" role="button">Begin <span class="glyphicon glyphicon-play"></span></a></p>
+            </div>
+                
+            
         </div>
-        <script src="moment.js"></script>
+        <div class="container overlay2">
+
+            <div class="dateTimeContainer">
+            </div>
+
+            <div id="timebox">
+                <div class = "date"></div> 
+                <div class = "time"><span class="glyphicon glyphicon-time"></span> <span class = "readableTime"></span></div> 
+
+                <div class= "controls">
+                    <button type="button" class="btn btn-default btn-xs slower"><span class="glyphicon glyphicon-backward"></span> Slower</button>
+                    <button type="button" class="btn btn-default btn-xs faster"><span class="glyphicon glyphicon-forward"></span> Faster</button>   
+                </div>
+                <div>1s in Viz = <span class = "timeFactor"></span>m in Life</div>
+
+                <!--$: <span class = "runningFare">Test</span>-->
+            </div>
+
+            <div class="bottomChart">
+                
+            </div>
+        </div>
+        <script src="js/moment.js"></script>
         <script src="//ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
         <script src="http://d3js.org/d3.v3.min.js"></script>
         <script src='https://api.tiles.mapbox.com/mapbox.js/v1.6.4/mapbox.js'></script>
-        <script src="script.js"></script>
+        <script src="js/script.js"></script>
+         <script src="js/bootstrap.min.js"></script>
     </body>
 </html>
 
