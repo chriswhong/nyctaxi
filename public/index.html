@@ -25,6 +25,7 @@
             <div class="collapse navbar-collapse">
                 <ul class="nav navbar-nav">
                     <li><a href="#about">About</a></li>
+                    <li><a href="#about">Asterisks</a></li>
 
                 </ul>
             </div><!--/.nav-collapse -->
@@ -37,7 +38,7 @@
     </div>
     <div class="container overlay">
         <div class="jumbotron">
-            <h1>NYC Taxi: A Day in the Life</h1>
+            <h1>NYC Taxis: A Day in the Life</h1>
             <p>This visualization displays the data for one random NYC yellow taxi on a single day in 2013.  See where it operated, how much money it made, and how busy it was over 24 hours.</p>
             <p class = 'text-center'><a id = "begin" class="btn btn-primary btn-lg" role="button">Begin <span class="glyphicon glyphicon-play"></span></a></p>
         </div>
@@ -53,6 +54,29 @@
         </div>
         <div>1s in Viz = <span class = "timeFactor"></span>m in Life</div>
     </div>
+    <div class="legendBox box">
+        <div class = "boxHeader"><span class="glyphicon glyphicon-map-marker"></span> Legend</div>
+        <div class = 'legendItem'>
+        <svg>
+            <circle r="5" id="marker" transform="translate(20,20)"></circle>
+        </svg><p>Full Taxi</p></div>
+        <div class = 'legendItem'>
+        <svg>
+            <circle r="20" id="marker" transform="translate(20,20)" style="opacity:0.30000000000000004"></circle>
+        </svg><p>Empty Taxi<sup>*</sup></p></div>
+        <div class = 'legendItem'>
+        <svg>
+            <circle r="5" class="startPoint" transform="translate(20,20)"></circle>
+        </svg><p>Trip Start Point</p></div>
+        <div class = 'legendItem'>
+        <svg>
+            <circle r="5" class="endPoint" transform="translate(20,20)"></circle>
+        </svg><p>Trip End Point</p></div>
+        <div class = 'legendItem'>
+        <svg>
+            <path class="trip true" style="opacity:.7" d="M10,10L30,30" ></path>
+        </svg><p>Trip Route<sup>*</sup></p></div>
+    </div>
     <!--$: <span class = "runningFare">Test</span>-->
 
     <div class="totalsBox box">
@@ -61,7 +85,7 @@
         <p>Fares: <span class = "runningFare running"></span></p>
         <p>Surcharge: <span class = "runningSurcharge running"></span></p>
         <p>MTA Tax: <span class = "runningTax running"></span></p>
-        <p>Tip: <span class = "runningTip running"></span></p>
+        <p>Tips<sup>*</sup>: <span class = "runningTip running"></span></p>
         <p class = "tolls">Tolls: <span class = "runningTolls running"></span></p>
         <p>Total: <span class = "runningTotal running"></span></p>
         <p>Passengers: <span class = "runningPassengers running"></span></p>

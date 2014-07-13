@@ -110,6 +110,12 @@
         left: 15px;
         width: 300px;  
     }
+     .legendBox {
+        position: absolute;
+        top: 220px;
+        left: 15px;
+        width: 300px;  
+    }
 
     .totalsBox {
         position: absolute;
@@ -189,3 +195,18 @@
     .navbar-inverse .navbar-nav>li>a:hover, .navbar-inverse .navbar-nav>li>a:focus {
         color: #000;
     }
+
+    .legendItem svg {
+        height: 40px;
+        width: 40px;
+    }
+
+    .legendItem p {
+        display: inline-block;
+        position: relative;
+        top: -14px;
+        left:10px;
+    }
+     .legendItem {
+        height:32px;
+     }
