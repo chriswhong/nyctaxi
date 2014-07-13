@@ -11,14 +11,24 @@ var map = L.map('map',{ zoomControl:false })
 .setView([40.7127, -74.0059], 14);
 
 
-var runningFare = 0 ;
+var running = {
+    "fare":0,
+    "surcharge":0,
+    "mtatax":0,
+    "tolls":0,
+    "tip":0,
+    "total":0,
+    "passengers":0
+} ;
+
+
 
 var svg = d3.select(map.getPanes().overlayPane).append("svg"),
 g = svg.append("g").attr("class", "leaflet-zoom-hide");
 
 
 //area chart
-var margin = {top: 20, right: 10, bottom: 30, left: 50},
+var margin = {top: 30, right: 20, bottom: 20, left: 40},
 areaChartWidth = $(window).width() - margin.left - margin.right -40,
 areaChartHeight = 140 - margin.top - margin.bottom;
 
@@ -44,13 +54,19 @@ var area = d3.svg.area()
 .y0(areaChartHeight)
 .y1(function(d) { return y(d.runningFare); });
 
-var areaChartSvg = d3.select(".overlay2").append("svg")
+var areaChartSvg = d3.select(".areaChartBox").append("svg")
 .attr("width", areaChartWidth + margin.left + margin.right)
 .attr("height", areaChartHeight + margin.top + margin.bottom)
 .attr("class","areaChart")
 .append("g")
 .attr("transform", "translate(" + margin.left + "," + margin.top + ")");
 
+var markerLine = areaChartSvg.append('line')
+    .attr('x1', 0)
+    .attr('y1', 0)
+    .attr('x2', 0) 
+    .attr('y2', areaChartHeight )
+    .attr("class","markerLine");
 
 var dummyData = [];
 
@@ -92,7 +108,10 @@ areaChartSvg.append("g")
 //listeners 
 
 $('.slower').click(function(){
-    timeFactor -= 1;
+    if(timeFactor > 1){
+        timeFactor -= 1;  
+    };
+    
     $('.timeFactor').html(timeFactor);
 
 });
@@ -111,17 +130,19 @@ var transform = d3.geo.transform({
 }),
 d3path = d3.geo.path().projection(transform);
 
+var timer;
 
 function updateTimer() {
     time.add('minutes',1);
     $('.readableTime').text(time.format('h:mm a'));
     $('.date').text(time.format('dddd, MMMM Do YYYY'));
-    setTimeout(function(){updateTimer()},(1000/timeFactor));
+    timer = setTimeout(function(){updateTimer()},(1000/timeFactor));
 }
 
 
 
 d3.json('http://localhost:3000/trip', function (data) {
+
 
 
 
@@ -245,13 +266,38 @@ return (duration);
 })
         .attrTween("stroke-dasharray", tweenDash)
         .each("end", function (d) {
-//console.log(d);
+
 if(d.properties.hasfare) {
-    runningFare += parseInt(d.properties.fare);
-    $('.runningFare').text(runningFare);
+   
+    running.fare += parseFloat(d.properties.fare);
+    running.surcharge += parseFloat(d.properties.surcharge);
+    running.mtatax += parseFloat(d.properties.mtatax);
+    running.tip += parseFloat(d.properties.tip);
+    running.tolls += parseFloat(d.properties.tolls);
+    running.total += parseFloat(d.properties.total);
+    running.passengers += parseFloat(d.properties.passengers);
+
+    
+
+     for(var p = 0;p<d.properties.passengers;p++){
+        $('.passengerGlyphs').append('<span class="glyphicon glyphicon-user"></span>');
+    }
+
+    updateRunning();
+
+    
+
 };
 i++;
-iterate();
+
+var nextPath = svg.select("path.trip" + i);
+if (nextPath[0][0]==null){
+    clearTimeout(timer);
+} else {
+   iterate(); 
+}
+
+
 });
 
     }
@@ -265,16 +311,16 @@ return function (t) {
     var p = path.node().getPointAtLength(t * l);
 marker.attr("transform", "translate(" + p.x + "," + p.y + ")");//move marker
 
-//console.log(tweenToggle);
+
 if (tweenToggle == 0) {
     tweenToggle = 1;
     var newCenter = map.layerPointToLatLng(new L.Point(p.x,p.y));
-//map.setView(newCenter, 14);
+
 map.panTo(newCenter, 14);
 } else {
     tweenToggle = 0;
 }
-//console.log(t);
+
 
 //update chart data every X frames
 if(chartInterval == 5){
@@ -293,27 +339,28 @@ if(isNaN(d.properties.fare)){
 }
 
 var incrementalFare = d.properties.fare*t;
-//console.log(runningFare + " " + incrementalFare + " " + decimalHour); 
 
 
 dummyData.push({
     "time": decimalHour,
-    "runningFare": runningFare + parseFloat(incrementalFare)
+    "runningFare": running.fare + parseFloat(incrementalFare)
 });
 
-//console.log(dummyData);
 
-chartPath.attr("d", area); 
-if(d.properties.hasfare == false) {
+chartPath.attr("d", area); //redraw area chart
+if(d.properties.hasfare == false) { //draw purple area for nonfare time
     emptyData.push({
         "time": decimalHour,
-        "runningFare": runningFare + parseFloat(incrementalFare)
+        "runningFare": running.fare + parseFloat(incrementalFare)
     });
 
     emptyPath.attr("d", area);
 }
 
-//at the end, write runningfare and decimalHour 
+markerLine
+ .attr('x1', x(decimalHour))
+ .attr('x2', x(decimalHour));
+    
 
 
 
@@ -328,6 +375,8 @@ return i(t);
 
 }
 
+updateRunning();
+
 $('#begin').click(function(){
     $('.overlay').fadeOut(2000);
     $('.overlay2').fadeIn(2000);
@@ -339,7 +388,15 @@ $('#begin').click(function(){
 });
 
 
-
+function updateRunning() {
+    $('.runningFare').text('$'+running.fare.toFixed(2));
+    $('.runningSurcharge').text('$'+running.surcharge.toFixed(2));
+    $('.runningTax').text('$'+running.mtatax.toFixed(2));
+    $('.runningTip').text('$'+running.tip.toFixed(2));
+    $('.runningTolls').text('$'+running.tolls.toFixed(2));
+    $('.runningTotal').text('$'+running.total.toFixed(2));
+    $('.runningPassengers').text(running.passengers);
+}
 
 // Reposition the SVG to cover the features.
 function reset() {
