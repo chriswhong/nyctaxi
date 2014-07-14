@@ -128,8 +128,29 @@ $('.reload').click(function(){
     location.reload();
 });
 
+$('.about').click(function(){
+    $('.aboutPopup').fadeIn();
+});
 
+$('.asterisks').click(function(){
+    $('.asterisksPopup').fadeIn();
+});
 
+$('.attribution').click(function(){
+    $('.attributionPopup').fadeIn();
+});
+
+$('.aboutPopup .panel-heading>.glyphicon').click(function(){
+    $('.aboutPopup').fadeOut();
+});
+
+$('.asterisksPopup .panel-heading>.glyphicon').click(function(){
+    $('.asterisksPopup').fadeOut();
+});
+
+$('.attributionPopup .panel-heading>.glyphicon').click(function(){
+    $('.attributionPopup').fadeOut();
+});
 
 var transform = d3.geo.transform({
     point: projectPoint
