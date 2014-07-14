@@ -100,6 +100,7 @@ function createGeojson(rawData,callback){
       }
     }
 
+    feature.properties.medallion = rawData[i].medallion;
     feature.properties.passengers = rawData[i].passengers;
     feature.properties.fare = rawData[i].fare;
     feature.properties.paymenttype = rawData[i].paymenttype;

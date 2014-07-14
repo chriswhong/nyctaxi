@@ -61,12 +61,12 @@
     }
 
     .empty {
-        fill: rgba(165, 165, 70, 1);
+        fill: #000;
     }
 
 
     .navbar-inverse {
-        background-color:#FFFF2D;
+        background-color:#F1F100;
     }
 
     .overlay {
@@ -116,6 +116,12 @@
         left: 15px;
         width: 300px;  
     }
+     .newBox {
+        position: absolute;
+        top: 448px;
+        left: 15px;
+        width: 300px;  
+    }
 
     .totalsBox {
         position: absolute;
@@ -142,6 +148,7 @@
         padding: 10px;
         box-sizing: border-box;
         border-radius: 6px;
+        display:none;
     }
 
     .boxHeader {
@@ -209,4 +216,9 @@
     }
      .legendItem {
         height:32px;
+     }
+
+     li iframe {
+        position: relative;
+        top: 15px;
      }
