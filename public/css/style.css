@@ -81,18 +81,18 @@
  
     }
 
-    .overlay2 {
-
-          top: 50px;
-        left: 0;
-        right: 0;
+    .popup {
+        position: relative;
+        top: 50%;
         bottom: 0;
-        position: absolute;
-        width: auto;
         height: auto;
+        -webkit-transform: translateY(-50%);
+        -ms-transform: translateY(-50%);
+        transform: translateY(-50%);
+        color: #333333;
+        width: 60%%;
+        z-index: 10;
         display:none;
-
-
     }
 
     .areaChartBox {
@@ -222,3 +222,24 @@
         position: relative;
         top: 15px;
      }
+
+     li>div {
+        padding:15px 15px;
+        color: #777;
+     }
+
+     li>div:hover {
+         color: #000;
+        cursor:pointer; 
+     }
+      
+     .panel-heading>.glyphicon {
+        float:right;
+        position:relative;
+        top:-14px;
+     }
+
+     .panel-heading>.glyphicon:hover {
+        cursor:pointer;
+     }
+  

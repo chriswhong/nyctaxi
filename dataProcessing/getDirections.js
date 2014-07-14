@@ -141,6 +141,8 @@ function callLoop(i) {
 
                 if (!error && response.statusCode === 200) {
                    
+                    console.log(body);
+
                     console.log("Called " + call + " with index " + index )
                     console.log("Legs for this call: " + body.routes[0].legs.length) 
                     var legs = body.routes[0].legs;
@@ -155,8 +157,9 @@ function callLoop(i) {
                         var d = rawData[r][k];
                         d.key = k;
                         d.trippolyline = getPolyline(legs[(j*2)]);
-                        d.nextpolyline = getPolyline(legs[(j*2)+1]);
-
+                        if(legs[(j*2)+1]){
+                            d.nextpolyline = getPolyline(legs[(j*2)+1]);
+                        }
                         
                         outputArray.push(d);
                     }
@@ -183,7 +186,7 @@ function writeToFile() {
                         });
 
                         
-                            var ws = fs.createWriteStream("output100.csv");
+                            var ws = fs.createWriteStream("output101.csv");
                             csv
                                .write(outputArray, {headers: true})
                                .pipe(ws);
