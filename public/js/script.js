@@ -124,6 +124,10 @@ $('.faster').click(function(){
 
 });
 
+$('.reload').click(function(){
+    location.reload();
+});
+
 
 
 
@@ -145,7 +149,7 @@ function updateTimer() {
 
 d3.json('/trip', function (data) {
 
-
+    console.log("Loaded data for medallion: " + data.features[0].properties.medallion);
 
 
     var feature = g.selectAll("path")
@@ -220,7 +224,6 @@ function iterate() {
     var startPoint = pathStartPoint(path);
     marker.attr("transform", "translate(" + startPoint[0] + "," + startPoint[1] + ")");
 
-//console.log(startPoint);
 
 path.each(function(d){
 
@@ -229,9 +232,7 @@ startPoint[0] = startPoint[0]; //+ topLeft[0];
 startPoint[1] = startPoint[1]; //+ topLeft[1];
 var newLatLon = coordToLatLon(startPoint);
 pointsArray.push([newLatLon.lng,newLatLon.lat,d.properties.hasfare]);
-//console.log(pointsArray);
 
-console.log(pointsArray);
 
 points = g.selectAll(".point")
 .data(pointsArray)
@@ -239,7 +240,6 @@ points = g.selectAll(".point")
 .append('circle')
 .attr("r",5)
 .attr("class",function(d){
-    console.log(d);
     if(d[2]) {
         return "startPoint point";
     } else {
@@ -416,12 +416,12 @@ return i(t);
 updateRunning();
 
 $('#begin').click(function(){
-    $('.overlay').fadeOut(2000);
-    $('.overlay2').fadeIn(2000);
+    $('.overlay').fadeOut(250);
+    $('.box').fadeIn(250);
     setTimeout(function(){
         updateTimer();
         iterate();
-    },2500);
+    },500);
 
 });
 
@@ -454,7 +454,6 @@ function reset() {
     //TODO: Figure out why this doesn't work as points.attr...
     g.selectAll(".point")
     .attr("transform",function(d){
-        console.log(d);
         return translatePoint(d);
     });
 
@@ -478,9 +477,7 @@ function translatePoint(d) {
 }
 
 function coordToLatLon(coord) {
-//console.log(coord[0] + " " + coord[1]);
 var point = map.layerPointToLatLng(new L.Point(coord[0],coord[1]));
-//console.log(point);
 return point;
 }
 
