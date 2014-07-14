@@ -223,6 +223,11 @@
         top: 15px;
      }
 
+     li .fb-like {
+        position: relative;
+        top: -14px;
+     }
+
      li>div {
         padding:15px 15px;
         color: #777;
