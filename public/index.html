@@ -10,6 +10,14 @@
 
 </head>
 <body>
+<div id="fb-root"></div>
+<script>(function(d, s, id) {
+  var js, fjs = d.getElementsByTagName(s)[0];
+  if (d.getElementById(id)) return;
+  js = d.createElement(s); js.id = id;
+  js.src = "//connect.facebook.net/en_US/sdk.js#xfbml=1&appId=174160066065207&version=v2.0";
+  fjs.parentNode.insertBefore(js, fjs);
+}(document, 'script', 'facebook-jssdk'));</script>
     <div class="navbar navbar-inverse navbar-fixed-top" role="navigation">
         <div class="container">
 
@@ -27,6 +35,9 @@
                     <li><div class = "about">About</div></li>
                     <li><div class = "asterisks">Asterisks</div></li>
                     <li><div class = "attribution">Attribution</div></li>
+                    <li>
+                        <div class="fb-like" data-href="http://nyctaxi.herokuapp.com/" data-layout="button_count" data-action="recommend" data-show-faces="true" data-share="true"></div>
+                    </li>
                     <li>
                         <a href="https://twitter.com/share" class="twitter-share-button" data-url="http://bit.ly/1nlyNQ5" data-text="A Day in the Life of an NYC Taxi: Data Visualization by @chris_whong" data-hashtags="dataviz">Tweet</a>
 <script>!function(d,s,id){var js,fjs=d.getElementsByTagName(s)[0],p=/^http:/.test(d.location)?'http':'https';if(!d.getElementById(id)){js=d.createElement(s);js.id=id;js.src=p+'://platform.twitter.com/widgets.js';fjs.parentNode.insertBefore(js,fjs);}}(document, 'script', 'twitter-wjs');</script>
@@ -123,7 +134,7 @@
             <button type="button" class="btn btn-default btn-xs slower"><span class="glyphicon glyphicon-backward"></span> Slower</button>
             <button type="button" class="btn btn-default btn-xs faster">Faster <span class="glyphicon glyphicon-forward"></span> </button>   
         </div>
-        <div>1s in Viz = <span class = "timeFactor"></span>m in Life</div>
+        <div>Time Factor: <span class = "timeFactor"></span> minutes per second</div>
     </div>
     <div class="legendBox box">
         <div class = "boxHeader"><span class="glyphicon glyphicon-map-marker"></span> Legend</div>
