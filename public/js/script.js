@@ -1,15 +1,18 @@
 var timeFactor = 5; //number of minutes in real life to a second in the viz
 $('.timeFactor').html(timeFactor); //Displays the timeFactor in the UI.
 var tweenToggle = 0;
-var mapboxTiles = L.tileLayer('https://{s}.tiles.mapbox.com/v3/cwhong.map-hziyh867/{z}/{x}/{y}.png', {
-    attribution: '<a href="http://www.mapbox.com/about/maps/" target="_blank">Terms &amp; Feedback</a>'
+
+var MapQuestOpen_OSM = L.tileLayer('http://otile{s}.mqcdn.com/tiles/1.0.0/map/{z}/{x}/{y}.jpeg', {
+    attribution: 'Tiles Courtesy of <a href="http://www.mapquest.com/">MapQuest</a> &mdash; Map data &copy; <a href="http://openstreetmap.org">OpenStreetMap</a> contributors, <a href="http://creativecommons.org/licenses/by-sa/2.0/">CC-BY-SA</a>',
+    subdomains: '1234',
+    opacity:.5
 });
 
 var topLeft,bottomRight;
 
 var time = moment();
 var map = L.map('map',{ zoomControl:false })
-.addLayer(mapboxTiles)
+.addLayer(MapQuestOpen_OSM)
 .setView([40.7127, -74.0059], 14);
 
 
