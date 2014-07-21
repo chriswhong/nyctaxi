@@ -264,3 +264,7 @@
       background-size: 65px 20px;
     }
   
+    p .label {
+        position: relative;
+        top: -2px;
+    }
