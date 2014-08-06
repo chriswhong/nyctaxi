@@ -1,0 +1,239 @@
+
+{
+   "routes" : [
+      {
+         "bounds" : {
+            "northeast" : {
+               "lat" : 40.71936549999999,
+               "lng" : -73.9829362
+            },
+            "southwest" : {
+               "lat" : 40.698348,
+               "lng" : -74.0105538
+            }
+         },
+         "copyrights" : "Map data ©2014 Google",
+         "legs" : [
+            {
+               "distance" : {
+                  "text" : "3.1 mi",
+                  "value" : 5024
+               },
+               "duration" : {
+                  "text" : "10 mins",
+                  "value" : 615
+               },
+               "end_address" : "53 Liberty Street, New York, NY 10005, USA",
+               "end_location" : {
+                  "lat" : 40.7086275,
+                  "lng" : -74.0093663
+               },
+               "start_address" : "74-84 Sands Street, Brooklyn, NY 11201, USA",
+               "start_location" : {
+                  "lat" : 40.6999814,
+                  "lng" : -73.987458
+               },
+               "steps" : [
+                  {
+                     "distance" : {
+                        "text" : "0.2 mi",
+                        "value" : 264
+                     },
+                     "duration" : {
+                        "text" : "1 min",
+                        "value" : 46
+                     },
+                     "end_location" : {
+                        "lat" : 40.6997606,
+                        "lng" : -73.98434759999999
+                     },
+                     "html_instructions" : "Head \u003cb\u003eeast\u003c/b\u003e on \u003cb\u003eSands St\u003c/b\u003e toward \u003cb\u003eJay St\u003c/b\u003e",
+                     "polyline" : {
+                        "points" : "{elwFrtqbM?UBeB@O?S@W@[?Q?G?EDm@?i@@i@Bu@HiABc@?G?A?A?G@K@O?ABa@"
+                     },
+                     "start_location" : {
+                        "lat" : 40.6999814,
+                        "lng" : -73.987458
+                     },
+                     "travel_mode" : "DRIVING"
+                  },
+                  {
+                     "distance" : {
+                        "text" : "390 ft",
+                        "value" : 119
+                     },
+                     "duration" : {
+                        "text" : "1 min",
+                        "value" : 13
+                     },
+                     "end_location" : {
+                        "lat" : 40.6997255,
+                        "lng" : -73.9829362
+                     },
+                     "html_instructions" : "Slight \u003cb\u003eleft\u003c/b\u003e to stay on \u003cb\u003eSands St\u003c/b\u003e",
+                     "maneuver" : "turn-slight-left",
+                     "polyline" : {
+                        "points" : "odlwFdaqbMDyG"
+                     },
+                     "start_location" : {
+                        "lat" : 40.6997606,
+                        "lng" : -73.98434759999999
+                     },
+                     "travel_mode" : "DRIVING"
+                  },
+                  {
+                     "distance" : {
+                        "text" : "0.1 mi",
+                        "value" : 154
+                     },
+                     "duration" : {
+                        "text" : "1 min",
+                        "value" : 21
+                     },
+                     "end_location" : {
+                        "lat" : 40.698348,
+                        "lng" : -73.9830564
+                     },
+                     "html_instructions" : "Take the 1st \u003cb\u003eright\u003c/b\u003e onto \u003cb\u003eGold St\u003c/b\u003e",
+                     "polyline" : {
+                        "points" : "idlwFjxpbMxFRH@N@"
+                     },
+                     "start_location" : {
+                        "lat" : 40.6997255,
+                        "lng" : -73.9829362
+                     },
+                     "travel_mode" : "DRIVING"
+                  },
+                  {
+                     "distance" : {
+                        "text" : "0.1 mi",
+                        "value" : 213
+                     },
+                     "duration" : {
+                        "text" : "1 min",
+                        "value" : 28
+                     },
+                     "end_location" : {
+                        "lat" : 40.6984474,
+                        "lng" : -73.9855738
+                     },
+                     "html_instructions" : "Take the 2nd \u003cb\u003eright\u003c/b\u003e onto \u003cb\u003eNassau St\u003c/b\u003e",
+                     "polyline" : {
+                        "points" : "u{kwFbypbM?D?NCbDCvAAp@At@Ap@?HCXAd@"
+                     },
+                     "start_location" : {
+                        "lat" : 40.698348,
+                        "lng" : -73.9830564
+                     },
+                     "travel_mode" : "DRIVING"
+                  },
+                  {
+                     "distance" : {
+                        "text" : "1.3 mi",
+                        "value" : 2086
+                     },
+                     "duration" : {
+                        "text" : "3 mins",
+                        "value" : 162
+                     },
+                     "end_location" : {
+                        "lat" : 40.7157765,
+                        "lng" : -73.99492289999999
+                     },
+                     "html_instructions" : "Turn \u003cb\u003eright\u003c/b\u003e onto \u003cb\u003eManhattan Bridge\u003c/b\u003e",
+                     "maneuver" : "turn-right",
+                     "polyline" : {
+                        "points" : "i|kwFxhqbMgEnBoAj@?@OFA@s@X?@A?KDcAd@C@}@`@SHA@A?QJA?y@^SJg@Ty@`@a@NA@QF]NUJiBz@MFwBbAKFEBSJqAh@_@PEBc@PeI|DiBz@UJSHqHnDmDbBA@KDA?GDGB?@GBIBA@A?A@KD[PA?UJq@ZeAd@OFA@s@ZaBr@YLA?C@_@PoAh@OHA@A?EBGBOHqAh@UJA?A@C@QH}At@KDEBG@WLYNOHYLA@C@WJkB|@SHSDOBWBU@eAB"
+                     },
+                     "start_location" : {
+                        "lat" : 40.6984474,
+                        "lng" : -73.9855738
+                     },
+                     "travel_mode" : "DRIVING"
+                  },
+                  {
+                     "distance" : {
+                        "text" : "0.4 mi",
+                        "value" : 722
+                     },
+                     "duration" : {
+                        "text" : "2 mins",
+                        "value" : 103
+                     },
+                     "end_location" : {
+                        "lat" : 40.71936549999999,
+                        "lng" : -74.0019147
+                     },
+                     "html_instructions" : "Turn \u003cb\u003eleft\u003c/b\u003e onto \u003cb\u003eCanal St\u003c/b\u003e",
+                     "maneuver" : "turn-left",
+                     "polyline" : {
+                        "points" : "showFfcsbMI^Qv@GVIPKTGNABELCJGXGRCJ@Pq@lCETSt@I\\Qt@a@zAWdAGTEJEHGLKPq@dA}A`CsArBgBrCwAvB"
+                     },
+                     "start_location" : {
+                        "lat" : 40.7157765,
+                        "lng" : -73.99492289999999
+                     },
+                     "travel_mode" : "DRIVING"
+                  },
+                  {
+                     "distance" : {
+                        "text" : "0.8 mi",
+                        "value" : 1350
+                     },
+                     "duration" : {
+                        "text" : "4 mins",
+                        "value" : 216
+                     },
+                     "end_location" : {
+                        "lat" : 40.7091466,
+                        "lng" : -74.0105538
+                     },
+                     "html_instructions" : "Turn \u003cb\u003eleft\u003c/b\u003e onto \u003cb\u003eBroadway\u003c/b\u003e",
+                     "maneuver" : "turn-left",
+                     "polyline" : {
+                        "points" : "a_pwF|ntbMj@d@fBvArBdBtB`BnBzAv@p@`Ax@jBxAdBtAjB~AdBnAnBtAdB~AlBvARN|AhAvBjB|AvA~AnAXR`BlAfCrB"
+                     },
+                     "start_location" : {
+                        "lat" : 40.71936549999999,
+                        "lng" : -74.0019147
+                     },
+                     "travel_mode" : "DRIVING"
+                  },
+                  {
+                     "distance" : {
+                        "text" : "381 ft",
+                        "value" : 116
+                     },
+                     "duration" : {
+                        "text" : "1 min",
+                        "value" : 26
+                     },
+                     "end_location" : {
+                        "lat" : 40.7086275,
+                        "lng" : -74.0093663
+                     },
+                     "html_instructions" : "Turn \u003cb\u003eleft\u003c/b\u003e onto \u003cb\u003eLiberty St\u003c/b\u003e",
+                     "maneuver" : "turn-left",
+                     "polyline" : {
+                        "points" : "e_nwF|dvbMjAwDZs@"
+                     },
+                     "start_location" : {
+                        "lat" : 40.7091466,
+                        "lng" : -74.0105538
+                     },
+                     "travel_mode" : "DRIVING"
+                  }
+               ],
+               "via_waypoint" : []
+            }
+         ],
+         "overview_polyline" : {
+            "points" : "{elwFrtqbMHmFDs@@sAPkD@W@QH{HrGVGpGEbDE~@wGzCeAd@MFqD`BeF|BuHnDeCfAyMnGyOpHe@TaKpEmKxEiBz@iClAg@Ng@F{AD[vAQh@Sd@Sv@K^@Pq@lCYjA[rAgAbEkAnBqJ`OrUfRpEtDtEdDdB~AlBvApBxAtEbExBbB`BlAfCrBjAwDZs@"
+         },
+         "summary" : "Manhattan Bridge and Broadway",
+         "warnings" : [],
+         "waypoint_order" : []
+      }
+   ],
+   "status" : "OK"
+}
