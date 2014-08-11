@@ -301,7 +301,7 @@ if(d.properties.hasfare) { //transition marker to show full taxi
 
 function transition(path) {
 
-    g.selectAll
+    path.attr("stroke-dasharray", "0," + path.node().getTotalLength());
 
     path.transition()
     .duration(function(d){
