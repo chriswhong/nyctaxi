@@ -33,17 +33,17 @@ router.get('/trip', function(req, res, next) {
   var getMedallion = "select medallion from `trips` order by random() limit 1";
 
   db.serialize(function() {
-db.each(getMedallion, function(err, result) {  //pick a medallion at random
-  console.log("Getting trips for Medallion " + result.medallion);
-  if (err) { console.log(err); }
-getRows(result.medallion,function(rows){ //get all rows for our medallion
-createGeojson(rows,function(geojson){ //convert polylines to geojson
-  console.log("Sending Results");
-res.json(geojson); //send the response
-});
-});  
-});
-});
+    db.each(getMedallion, function(err, result) {  //pick a medallion at random
+      console.log("Getting trips for Medallion " + result.medallion);
+      if (err) { console.log(err); }
+      getRows(result.medallion,function(rows){ //get all rows for our medallion
+        createGeojson(rows,function(geojson){ //convert polylines to geojson
+          console.log("Sending Results");
+          res.json(geojson); //send the response
+        });
+      });  
+    });
+  });
 });
 
 app.use('/', router);

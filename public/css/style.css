@@ -133,7 +133,7 @@
     .totalsBox p {
         font-size: 20px;
         margin-bottom: 0;
-    }
+    } 
 
     .running {
         float:right;
@@ -267,4 +267,12 @@
     p .label {
         position: relative;
         top: -2px;
+    }
+
+    .badges {
+        text-align:center;
+    }
+
+    .badges img {
+         margin: 0 5px;
     }
