@@ -1,8 +1,8 @@
 var timeFactor = 5; //number of minutes in real life to a second in the viz
 $('.timeFactor').html(timeFactor); //Displays the timeFactor in the UI.
 var tweenToggle = 0;
-var mapboxTiles = L.tileLayer('https://{s}.tiles.mapbox.com/v3/cwhong.map-hziyh867/{z}/{x}/{y}.png', {
-    attribution: '<a href="http://www.mapbox.com/about/maps/" target="_blank">Terms &amp; Feedback</a>'
+   var tiles = L.tileLayer('http://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}.png',{
+  attribution: '&copy; <a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors, &copy; <a href="http://cartodb.com/attributions">CartoDB</a>'
 });
 
 
@@ -10,7 +10,7 @@ var topLeft,bottomRight;
 
 var time = moment();
 var map = L.map('map',{ zoomControl:false })
-.addLayer(mapboxTiles)
+.addLayer(tiles)
 .setView([40.7127, -74.0059], 14);
 
 
