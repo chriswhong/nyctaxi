@@ -169,7 +169,7 @@ function updateTimer() {
 
 
 
-d3.json('/trip', function (data) {
+d3.json('/trips', function (data) {
 
     console.log("Loaded data for medallion: " + data.features[0].properties.medallion);
 

@@ -28,7 +28,7 @@ app.all('*', function(req, res, next) {
   next();
 });
 
-router.get('/trip', function(req, res, next) {
+router.get('/trips', function(req, res, next) {
 
   var getMedallion = "select medallion from `trips` order by random() limit 1";
 
