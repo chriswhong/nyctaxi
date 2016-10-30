@@ -78,6 +78,7 @@
         -ms-transform: translateY(-50%);
         transform: translateY(-50%);
         color:#333333;
+        z-index: 410;
  
     }
 
@@ -90,8 +91,8 @@
         -ms-transform: translateY(-50%);
         transform: translateY(-50%);
         color: #333333;
-        width: 60%%;
-        z-index: 10;
+        width: 60%;
+        z-index: 410;;
         display:none;
     }
 
@@ -275,4 +276,8 @@
 
     .badges img {
          margin: 0 5px;
+    }
+
+    .twitter-button {
+        padding: 16px 0px;
     }

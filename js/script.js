@@ -1,10 +1,10 @@
 var timeFactor = 5; //number of minutes in real life to a second in the viz
 $('.timeFactor').html(timeFactor); //Displays the timeFactor in the UI.
 var tweenToggle = 0;
-   var tiles = L.tileLayer('http://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}.png',{
+
+var tiles = L.tileLayer('http://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}.png',{
   attribution: '&copy; <a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors, &copy; <a href="http://cartodb.com/attributions">CartoDB</a>'
 });
-
 
 var topLeft,bottomRight;
 
@@ -167,9 +167,10 @@ function updateTimer() {
     timer = setTimeout(function(){updateTimer()},(1000/timeFactor));
 }
 
+//get a random number between 0 and 11
+var number = Math.floor(Math.random() * 15) 
 
-
-d3.json('/trips', function (data) {
+d3.json('data/taxiday' + number + '.geojson', function (data) {
 
     console.log("Loaded data for medallion: " + data.features[0].properties.medallion);
 
@@ -192,7 +193,6 @@ d3.json('/trips', function (data) {
     .data(pointsArray);
 
 
-//.attr("style","opacity:0");
 
 
 
@@ -209,6 +209,7 @@ marker.attr("r", 5)
 
 
 map.on("viewreset", reset);
+map.on("zoomend", reset);
 reset();
 
 var i = 0;

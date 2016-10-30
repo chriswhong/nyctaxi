@@ -1,399 +1,217 @@
 <!DOCTYPE html>
 <html>
-<meta charset="utf-8">
-<title>A day in the life</title>
-<style>
-    html,
-    body {
-        height: 100%;
-        width: 100%;
-    }
-    body {
-        margin: 0;
-    }
-    #map {
-        width: 100%;
-        height: 100%;
-    }
-    svg {
-        position: relative;
-    }
-    path {
-        fill: none;
-        stroke-width: 4px;
-    }
-
-    path.true {
-        stroke:#3366FF;
-    }
-
-    path.false {
-        stroke:#990099;
-    }
-
-    circle {
-        fill: yellow;
-    }
-
-    #timebox {
-        position:absolute;
-        height:200px;
-        width:300px;
-        top:0;
-        left:0;
-        z-index:10;
-        background:#000;
-        color:white;
-        margin:30px;
-        padding:30px;
-    }
-
-    .areaChart {
-        position: absolute;
-        bottom: 0;
-        background: #000;
-    }
-
-    .axis path,
-    .axis line {
-          fill: none;
-          stroke: #FFF;
-          shape-rendering: crispEdges;
-          stroke-width:1;
-    }
-
-    .axis text {
-      stroke:white;
-    }
-
-    .area {
-      fill: #3366FF;
-    }
-
-    .empty {
-        fill: #990099;
-    }
-
-</style>
-
-
-
-
-<div id="map">
-</div>
-<div id="timebox">
-    Time: <span class = "time">Test</span> <br/>
-    $: <span class = "runningFare">Test</span>
-
-</div>
-
-<script src="moment.js"></script>
-<script src="//ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
-<script src="http://d3js.org/d3.v3.min.js"></script>
-
-<script src="http://maps.google.com/maps/api/js?libraries=geometry&sensor=false"></script>
-<script src='https://api.tiles.mapbox.com/mapbox.js/v1.6.4/mapbox.js'></script>
-<link href='https://api.tiles.mapbox.com/mapbox.js/v1.6.4/mapbox.css' rel='stylesheet' />
-<script>
-    var timeFactor = 5; //number of minutes in real life to a second in the viz
-    var tweenToggle = 0;
-
-    var tiles = L.tileLayer('http://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}.png',{
-  attribution: '&copy; <a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors, &copy; <a href="http://cartodb.com/attributions">CartoDB</a>'
-});
-
-
-    var time = moment(),thisDuration;
-    var map = L.map('map')
-        .addLayer(tiles)
-        .setView([40.7127, -74.0059], 14);
-
-
-    var runningFare = 0 ;
-
-    var svg = d3.select(map.getPanes().overlayPane).append("svg"),
-        g = svg.append("g").attr("class", "leaflet-zoom-hide");
-
-
-//area chart
-var margin = {top: 20, right: 20, bottom: 30, left: 50},
-    areaChartWidth = 1100 - margin.left - margin.right,
-    areaChartHeight = 200 - margin.top - margin.bottom;
-
-var parseDate = d3.time.format("%d-%b-%y").parse;
-
-var x = d3.scale.linear()
-    .range([0, areaChartWidth]);
-
-var y = d3.scale.linear()
-    .range([areaChartHeight, 0]);
-
-var xAxis = d3.svg.axis()
-    .scale(x)
-    .orient("bottom");
-
-var yAxis = d3.svg.axis()
-    .scale(y)
-    .orient("left");
-
-var area = d3.svg.area()
-    .x(function(d) { return x(d.time); })
-    .y0(areaChartHeight)
-    .y1(function(d) { return y(d.runningFare); });
-
-var areaChartSvg = d3.select("body").append("svg")
-    .attr("width", areaChartWidth + margin.left + margin.right)
-    .attr("height", areaChartHeight + margin.top + margin.bottom)
-    .attr("class","areaChart")
-  .append("g")
-    .attr("transform", "translate(" + margin.left + "," + margin.top + ")");
-
-
-var dummyData = [];
-
-
-
-  x.domain([0, 24]);
-  y.domain([0, 500]);
-
-  var chartPath = areaChartSvg.append("path")
-    .datum(dummyData)
-    .attr("class", "area");
-      //.attr("d", area);
-
-  areaChartSvg.append("g")
-      .attr("class", "x axis")
-      .attr("transform", "translate(0," + areaChartHeight + ")")
-      .call(xAxis);
-
-  areaChartSvg.append("g")
-      .attr("class", "y axis")
-      .call(yAxis)
-    .append("text")
-      .attr("transform", "rotate(-90)")
-      .attr("y", 6)
-      .attr("dy", ".71em")
-      .style("text-anchor", "end")
-      .text("Price ($)");
-
-
-
-//end area chart
-
-
-
-    var transform = d3.geo.transform({
-            point: projectPoint
-        }),
-        d3path = d3.geo.path().projection(transform);
-
-
-    function updateTimer() {
-        time.add('minutes',1);
-        $('.time').html(time.format('HH:mm'));
-
-        setTimeout(function(){updateTimer()},(1000/timeFactor));
-    }
-
-    updateTimer();
-
-    d3.json('http://localhost:3000/trip', function (data) {
-        
-
-        var feature = g.selectAll("path")
-            .data(data.features)
-            .enter().append("path")
-            .attr("class", function (d) {
-
-                if (d.properties.hasfare == true) {
-                    return "trip" + (d.properties.key * 2) + " " + d.properties.hasfare;
-                } else {
-                    return "trip" + ((d.properties.key * 2) + 1) + " " + d.properties.hasfare;
-                }
-            })
-            .attr("style", "opacity:0");
-        //.attr("style","opacity:0");
-
-            
-
-              var marker = g.append("circle");
-              marker.attr("r", 5)
-                .attr("id", "marker");
-                //.attr("transform", "translate(" + startPoint + ")");
-
-              //Get path start point for placing marker
-              
-
-
-        //var string = JSON.stringify(j);
-    
-
-        map.on("viewreset", reset);
-        reset();
-
-        var i = 0;
-
-        function iterate() {
-
-        var chartInterval = 0;
-            
-        var emptyData = [];
-         
-         var emptyPath = areaChartSvg.append("path")
-        .datum(emptyData)
-        .attr("class", "empty");
-
-             
-
-        var path = svg.select("path.trip" + i)
-                .attr("style", "opacity:.7")
-                .call(transition);
-
-
-
-            function pathStartPoint(path) {
-                var d = path.attr('d');
-           
-                dsplitted = d.split("L")[0].slice(1);
- 
-                return dsplitted;
-              }
-            var startPoint = pathStartPoint(path);
-            marker.attr("transform", "translate(" + startPoint + ")");
-            
-
-        function transition(path) {
-            path.transition()
-                .duration(function(d){
-                    //calculate seconds
-                    var start = Date.parse(d.properties.pickuptime),
-                    finish = Date.parse(d.properties.dropofftime),
-                    duration = finish - start;
-
-                    duration = duration/60000; //convert to minutes
-
-                    duration = duration * (1/timeFactor) * 1000;
-
-                
-                    time = moment(d.properties.pickuptime.toString());
+<head>
+    <meta charset="utf-8">
+    <title>A Day in the Life</title>
+
+    <link rel='stylesheet' href='https://api.tiles.mapbox.com/mapbox.js/v1.6.4/mapbox.css'  />
+    <link href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
+    <link rel="stylesheet" type="text/css" href="css/style.css">
+
+</head>
+<body>
+<div id="fb-root"></div>
+<script>(function(d, s, id) {
+  var js, fjs = d.getElementsByTagName(s)[0];
+  if (d.getElementById(id)) return;
+  js = d.createElement(s); js.id = id;
+  js.src = "//connect.facebook.net/en_US/sdk.js#xfbml=1&appId=174160066065207&version=v2.0";
+  fjs.parentNode.insertBefore(js, fjs);
+}(document, 'script', 'facebook-jssdk'));</script>
+    <div class="navbar navbar-inverse navbar-fixed-top" role="navigation">
+        <div class="container">
+
+            <div class="navbar-header">
+                <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
+                    <span class="sr-only">Toggle navigation</span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                </button>
+                <a class="navbar-brand" href="#"><span class="glyphicon glyphicon-road    "></span> NYC Taxis: A Day in the Life</a>
+            </div>
+            <div class="collapse navbar-collapse">
+                <ul class="nav navbar-nav">
+                    <li><div class = "about">About</div></li>
+                    <li><div class = "asterisks">Asterisks</div></li>
+                    <li><div class = "attribution">Attribution</div></li>
+                    <li>
+                        <div class="fb-like" data-href="http://nyctaxi.herokuapp.com/" data-layout="button_count" data-action="recommend" data-show-faces="true" data-share="true"></div>
+                    </li>
+                    <li class=twitter-button>
+                        <a href="https://twitter.com/share" class="twitter-share-button" data-url="http://nyctaxi.herokuapp.com" data-text="A Day in the Life of an NYC Taxi: Data Visualization by @chris_whong" data-hashtags="dataviz">Tweet</a>
+<script>!function(d,s,id){var js,fjs=d.getElementsByTagName(s)[0],p=/^http:/.test(d.location)?'http':'https';if(!d.getElementById(id)){js=d.createElement(s);js.id=id;js.src=p+'://platform.twitter.com/widgets.js';fjs.parentNode.insertBefore(js,fjs);}}(document, 'script', 'twitter-wjs');</script>
+                    </li>
                     
-                    thisDuration = duration;
-                    
-                    $('.time').html(time.format('HH:mm'));
 
 
-                    return (duration);
-                })
-                .attrTween("stroke-dasharray", tweenDash)
-                .each("end", function (d) {
-                    //console.log(d);
-                    if(d.properties.hasfare) {
-                        runningFare += parseInt(d.properties.fare);
-                        $('.runningFare').text(runningFare);
-                    };
-                    i++;
-                    iterate();
-                });
+                </ul>
+            </div><!--/.nav-collapse -->
 
-        }
 
-        function tweenDash(d) {
+
+        </div>
+    </div>
+    <div id="map">
+
+    </div>
+    <div class="container overlay">
+        <div class="jumbotron">
+            <h1>NYC Taxis: A Day in the Life</h1>
+            <p>This visualization displays the data for one random NYC yellow taxi on a single day in 2013.  See where it operated, how much money it made, and how busy it was over 24 hours.</p><br/>
+            <p class = 'text-center'><a id = "begin" class="btn btn-primary btn-lg" role="button">Begin <span class="glyphicon glyphicon-play"></span></a></p>
+            <br/>
+            <p style = 'font-size:16px'>A Special Thanks goes out to <a href = "http://www.mapbox.com">Mapbox</a> and <a href = "http://www.heroku.com">Heroku</a> for assistance with covering the surge of activity when this project was first released in 2014. </p>
+            <p style = 'font-size:16px'> Here's <a href = "http://chriswhong.com/data-visualization/taxitechblog1/">Technical Blog Post #1</a> and <a href = "http://chriswhong.com/open-data/taxi-techblog-2-leaflet-d3-and-other-frontend-fun/">#2</a> about how this visualization was built. </p>
+            <div class = "badges">
+            <a href = "http://www.informationisbeautifulawards.com/news/49-2014-the-winners"><img src = "img/kantariib.png"></a>
+            <a href = "http://www.andresmh.com/nyctaxitrips/"><img src = "img/getDataButton.png"></a>
+            </div>
+        </div>
+    </div>
+    <div class = 'container popup aboutPopup'>
+        <div class="panel panel-primary">
+      <div class="panel-heading">
+        <h3 class="panel-title">About</h3><span class="glyphicon glyphicon-remove"></span>
+      </div>
+      <div class="panel-body">
+      <strong><p>NYC Taxis: A Day in the Life - A Data Visualization by <a href = "http://chriswhong.com">Chris Whong</a></p></strong>
+
+        <p>This civic technology project visualizes <a href = "http://www.andresmh.com/nyctaxitrips/">taxi trip data from 2013</a>, showing the activities of a single taxi on a single day.  The original data include ~170 Million trips. Of these, 30 cab/days were queried at random for inclusion in this project. The data were provided by the <a href = "http://www.nyc.gov/html/tlc/html/home/home.shtml">Taxi and Limousine Commission</a> via a <a href = "http://chriswhong.com/open-data/foil_nyc_taxi/">FOIL request.</a></p> 
+        <p>
+            The intent is to analyze running counts of fares, taxes, etc, over the course of a day, and to see how/when taxis move around New York. 
+        </p>
+        <p>
+            The raw data include only start and end locations for each trip.  These points were run through Google's Directions API to create the routes shown in this visualization.  Of course, these are Google's best choice, not necessarily the one the taxi took.
+        </p>
+        <p>Support Civic Hacking and Open Data! </p>
+        <p>Check out <a href = "http://www.betanyc.us">BetaNYC</a>, New York City's Civic Hacking Community.</p>
+        <p><a href = "https://github.com/chriswhong/taxitracker">Code on Github</a></p>
+        <img src = "http://i.creativecommons.org/l/by-sa/3.0/88x31.png">
+         <br/>
+         <br/>
+         <a href="https://twitter.com/chris_whong" class="twitter-follow-button" data-show-count="false">Follow @chris_whong</a>
+<script>!function(d,s,id){var js,fjs=d.getElementsByTagName(s)[0],p=/^http:/.test(d.location)?'http':'https';if(!d.getElementById(id)){js=d.createElement(s);js.id=id;js.src=p+'://platform.twitter.com/widgets.js';fjs.parentNode.insertBefore(js,fjs);}}(document, 'script', 'twitter-wjs');</script>
+
+      </div>
+    </div>
+    </div>
+    <div class = 'container popup asterisksPopup'>
+        <div class="panel panel-primary">
+      <div class="panel-heading">
+        <h3 class="panel-title">Asterisks</h3><span class="glyphicon glyphicon-remove"></span>
+      </div>
+      <div class="panel-body">
+        <h4>Here are some gotchas:</h4>
+        <ul>
+            <li><strong>Trip Routes</strong> are a result of passing the start and end locations to the <a href = "https://developers.google.com/maps/documentation/directions/">Google Directions API</a>.  They are a possible route that the taxi took, but should not be assumed to be accurate.</li>
+            <li><strong>Empty Taxis</strong> also follow the "best route" between a dropoff and the next pickup.  Just as with the trips, this is just an effective way to move the marker around, but doesn't reflect the reality of where the taxi traveled. </li>
+            <li><strong>Tips</strong> are only reported in the data for credit card transactions.  Cash tips are not included. </li>
+        </ul>
+      </div>
+    </div>
+    </div>
+    <div class = 'container popup attributionPopup'>
+        <div class="panel panel-primary">
+      <div class="panel-heading">
+        <h3 class="panel-title">Attribution</h3><span class="glyphicon glyphicon-remove"></span>
+      </div>
+      <div class="panel-body">
+
+        <ul>
+            <li><a href = "http://bost.ocks.org/mike/leaflet/">Mike Bostock's D3 + Leaflet</a> - The foundation for throwing geoJSON onto Leaflet with external tiles.
+            </li>
+            <li><a href = "http://bl.ocks.org/KoGor/8163022">KoGor's Marker Animation Along SVG Path</a> - This technique made the animated cab marker work!
+            </li>
+            <li>
+            <a href = "http://www.mapbox.com">Mapbox</a> for super-simple subdued basemap tiles, and for releasing a totally sweet node package for converting Google Encoded Polylines into raw Coordinates.
+            </li>
+            <li>
+            Thanks to <a href = "http://www.reddit.com/r/bigquery/comments/28ialf/173_million_2013_nyc_taxi_rides_shared_on_bigquery/">u/fhoffa on Reddit</a> for importing the data into BigQuery helping me with the custom query I needed to pull full days of data for random taxis.
+            </li>
+
             
-            var l = path.node().getTotalLength();
-            var i = d3.interpolateString("0," + l, l + "," + l); // interpolation of stroke-dasharray style attr
-            return function (t) {
-                var marker = d3.select("#marker");
-                var p = path.node().getPointAtLength(t * l);
-                marker.attr("transform", "translate(" + p.x + "," + p.y + ")");//move marker
+        </ul>
+      </div>
+    </div>
+    </div>
+    <div class="dateTimeBox box">
+        <div class = "date"></div> 
+        <div class = "time"><span class="glyphicon glyphicon-time"></span> <span class = "readableTime"></span></div> 
+        <div class= "controls">
+            <button type="button" class="btn btn-default btn-xs slower"><span class="glyphicon glyphicon-backward"></span> Slower</button>
+            <button type="button" class="btn btn-default btn-xs faster">Faster <span class="glyphicon glyphicon-forward"></span> </button>   
+        </div>
+        <div>Time Factor: <span class = "timeFactor"></span> minutes per second</div>
+    </div>
+    <div class="legendBox box">
+        <div class = "boxHeader"><span class="glyphicon glyphicon-map-marker"></span> Legend</div>
+        <div class = 'legendItem'>
+        <svg>
+            <circle r="5" id="marker" transform="translate(20,20)"></circle>
+        </svg><p>Full Taxi</p></div>
+        <div class = 'legendItem'>
+        <svg>
+            <circle r="20" id="marker" transform="translate(20,20)" style="opacity:0.30000000000000004"></circle>
+        </svg><p>Empty Taxi<sup>*</sup></p></div>
+        <div class = 'legendItem'>
+        <svg>
+            <circle r="5" class="startPoint" transform="translate(20,20)"></circle>
+        </svg><p>Trip Start Point</p></div>
+        <div class = 'legendItem'>
+        <svg>
+            <circle r="5" class="endPoint" transform="translate(20,20)"></circle>
+        </svg><p>Trip End Point</p></div>
+        <div class = 'legendItem'>
+        <svg>
+            <path class="trip true" style="opacity:.7" d="M10,10L30,30" ></path>
+        </svg><p>Trip Route<sup>*</sup></p></div>
+    </div>
 
-                //console.log(tweenToggle);
-                if (tweenToggle == 0) {
-                    tweenToggle = 1;
-                    var newCenter = map.layerPointToLatLng(new L.Point(p.x,p.y));
-                    //map.setView(newCenter, 14);
-                    map.panTo(newCenter, 14);
-                } else {
-                    tweenToggle = 0;
-                }
-                //console.log(t);
+    <div class="newBox box">
+     <button type="button" class="btn btn-default btn-lg reload">
+      <span class="glyphicon glyphicon-refresh"></span> Load Another Taxi!
+    </button>
+    </div>
+    <!--$: <span class = "runningFare">Test</span>-->
 
-                    //update chart data every X frames
-                    if(chartInterval == 5){
-                    
-                        chartInterval = 0;
+    <div class="totalsBox box">
+        <div class = "boxHeader"><span class="glyphicon glyphicon-dashboard"></span> Running Totals</div>
 
-
-
-                        var decimalHour = parseInt(time.format('H')) + parseFloat(time.format('m')/60)
-                        //console.log(d);
-
-
-
-                        if(isNaN(d.properties.fare)){
-                           d.properties.fare = 0; 
-                        }
-
-                        var incrementalFare = d.properties.fare*t;
-                        //console.log(runningFare + " " + incrementalFare + " " + decimalHour); 
-                
-                        
-                           dummyData.push({
-                            "time": decimalHour,
-                            "runningFare": runningFare + parseFloat(incrementalFare)
-                        });
-
-                        //console.log(dummyData);
-
-                        chartPath.attr("d", area); 
-                        if(d.properties.hasfare == false) {
-                            emptyData.push({
-                            "time": decimalHour,
-                            "runningFare": runningFare + parseFloat(incrementalFare)
-                        });
-
-                            emptyPath.attr("d", area);
-                        }
-
-                        //at the end, write runningfare and decimalHour 
-                        
-
-
-                    } else {
-                        chartInterval++;
-                    }
+        <p>Fares: <span class = "runningFare running"></span></p>
+        <p>Surcharge: <span class = "runningSurcharge running"></span></p>
+        <p>MTA Tax: <span class = "runningTax running"></span></p>
+        <p>Tips<sup>*</sup>: <span class = "runningTip running"></span></p>
+        <p class = "tolls">Tolls: <span class = "runningTolls running"></span></p>
+        <p>Total: <span class = "runningTotal running"></span></p>
+        <p>Passengers: <span class = "runningPassengers running"></span></p>
+        <div class = "passengerGlyphs"></div>
+    </div>  
 
 
-                return i(t);
-            }
-        }
-
-        }
-        
-        iterate();
-
-        // Reposition the SVG to cover the features.
-        function reset() {
-            var bounds = d3path.bounds(data),
-                topLeft = bounds[0],
-                bottomRight = bounds[1];
-
-            svg.attr("width", bottomRight[0] - topLeft[0])
-                .attr("height", bottomRight[1] - topLeft[1])
-                .style("left", topLeft[0] + "px")
-                .style("top", topLeft[1] + "px");
-
-            g.attr("transform", "translate(" + -topLeft[0] + "," + -topLeft[1] + ")");
-
-            feature.attr("d", d3path);
-        }
+    <div class="areaChartBox box">
+    </div>
 
 
 
+    <script src="js/moment.js"></script>
+    <script src="//ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
+    <script src="http://d3js.org/d3.v3.min.js"></script>
+    <script src='https://api.tiles.mapbox.com/mapbox.js/v1.6.4/mapbox.js'></script>
+    <script src="js/script.js"></script>
 
-    });
-    // Use Leaflet to implement a D3 geometric transformation.
-    function projectPoint(x, y) {
-        var point = map.latLngToLayerPoint(new L.LatLng(y, x));
-        this.stream.point(point.x, point.y);
-    }
+    <script>
+  (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+  (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+  m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+  })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+
+  ga('create', 'UA-4921346-5', 'auto');
+  ga('send', 'pageview');
+
 </script>
+</body>
+</html>
+
+
+
