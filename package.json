@@ -1,0 +1,29 @@
+{
+  "name": "nyctaxi",
+  "version": "1.0.0",
+  "description": "Repo for NYC Taxis: A Day in the Life, a data visualization that shows the movements and earnings of a single NYC taxi over 24 hours.",
+  "main": "server.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "node server.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/chriswhong/nyctaxi.git"
+  },
+  "keywords": [
+    "visualisation",
+    "opendata"
+  ],
+  "author": "Chris Whong, Danny Holloway, Aidan Feldman",
+  "license": "UNLICENSED",
+  "bugs": {
+    "url": "https://github.com/chriswhong/nyctaxi/issues"
+  },
+  "homepage": "https://github.com/chriswhong/nyctaxi#readme",
+  "dependencies": {
+    "express": "^4.19.2",
+    "polyline": "^0.2.0",
+    "sqlite3": "^5.1.7"
+  }
+}
