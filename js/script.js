@@ -2,16 +2,8 @@ var timeFactor = 5; //number of minutes in real life to a second in the viz
 $('.timeFactor').html(timeFactor); //Displays the timeFactor in the UI.
 var tweenToggle = 0;
 
-var tiles = L.tileLayer('http://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}.png',{
-  attribution: '&copy; <a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors, &copy; <a href="http://cartodb.com/attributions">CartoDB</a>'
-});
-
-var topLeft,bottomRight;
-
 var time = moment();
-var map = L.map('map',{ zoomControl:false })
-.addLayer(tiles)
-.setView([40.7127, -74.0059], 14);
+var map; // created once the taxi data loads, centered on its start point
 
 
 var running = {
@@ -24,10 +16,6 @@ var running = {
     "passengers":0
 } ;
 
-
-
-var svg = d3.select(map.getPanes().overlayPane).append("svg"),
-g = svg.append("g").attr("class", "leaflet-zoom-hide");
 
 
 //area chart
@@ -168,12 +156,25 @@ function updateTimer() {
 }
 
 //get a random number between 0 and 11
-var number = Math.floor(Math.random() * 15) 
+var number = Math.floor(Math.random() * 15)
 
 d3.json('data/taxiday' + number + '.geojson', function (data) {
 
     console.log("Loaded data for medallion: " + data.features[0].properties.medallion);
 
+    var startCoord = data.features[0].geometry.coordinates[0];
+
+    map = new maplibregl.Map({
+        container: 'map',
+        style: 'https://tiles.openfreemap.org/styles/dark',
+        center: startCoord,
+        zoom: 14
+    });
+
+    var svg = d3.select(map.getCanvasContainer()).append("svg").attr("class", "mapOverlay"),
+    g = svg.append("g");
+
+    map.on('load', function () {
 
     var feature = g.selectAll("path")
     .data(data.features)
@@ -208,8 +209,7 @@ marker.attr("r", 5)
 //var string = JSON.stringify(j);
 
 
-map.on("viewreset", reset);
-map.on("zoomend", reset);
+map.on("move", reset);
 reset();
 
 var i = 0;
@@ -375,9 +375,9 @@ marker.attr("transform", "translate(" + p.x + "," + p.y + ")");//move marker
 
 if (tweenToggle == 0) {
     tweenToggle = 1;
-    var newCenter = map.layerPointToLatLng(new L.Point(p.x,p.y));
+    var newCenter = map.unproject([p.x, p.y]);
 
-    map.panTo(newCenter, 14);
+    map.easeTo({center: newCenter, duration: 250, easing: function (t) { return t; }}); // short linear ease so the camera glides smoothly instead of snapping
 } else {
     tweenToggle = 0;
 }
@@ -459,22 +459,17 @@ function updateRunning() {
     $('.runningPassengers').text(running.passengers);
 }
 
-// Reposition the SVG to cover the features.
+// Reposition the SVG to cover the map, and reproject all features.
 function reset() {
-    var bounds = d3path.bounds(data);
-    topLeft = bounds[0],
-    bottomRight = bounds[1];
+    var canvas = map.getCanvas();
 
-    svg.attr("width", bottomRight[0] - topLeft[0] + 100)
-    .attr("height", bottomRight[1] - topLeft[1] + 100)
-    .style("left", topLeft[0]-50 + "px")
-    .style("top", topLeft[1]-50 + "px");
-
-    g.attr("transform", "translate(" + (-topLeft[0]+50) + "," + (-topLeft[1]+50)+ ")");
+    svg.attr("width", canvas.clientWidth)
+    .attr("height", canvas.clientHeight)
+    .style("left", "0px")
+    .style("top", "0px");
 
     feature.attr("d", d3path);
 
-    //TODO: Figure out why this doesn't work as points.attr...
     g.selectAll(".point")
     .attr("transform",function(d){
         return translatePoint(d);
@@ -484,23 +479,23 @@ function reset() {
 }
 
 
-
+});
 
 });
-// Use Leaflet to implement a D3 geometric transformation.
+// Use MapLibre GL to implement a D3 geometric transformation.
 function projectPoint(x, y) {
-    var point = map.latLngToLayerPoint(new L.LatLng(y, x));
+    var point = map.project([x, y]);
     this.stream.point(point.x, point.y);
 }
 
 function translatePoint(d) {
-    var point = map.latLngToLayerPoint(new L.LatLng(d[1],d[0]));  
+    var point = map.project([d[0], d[1]]);
 
     return "translate(" + point.x + "," + point.y + ")";
 }
 
 function coordToLatLon(coord) {
-var point = map.layerPointToLatLng(new L.Point(coord[0],coord[1]));
+var point = map.unproject([coord[0], coord[1]]);
 return point;
 }
 

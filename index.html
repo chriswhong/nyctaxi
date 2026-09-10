@@ -4,7 +4,7 @@
     <meta charset="utf-8">
     <title>A Day in the Life</title>
 
-    <link rel='stylesheet' href='https://api.tiles.mapbox.com/mapbox.js/v1.6.4/mapbox.css'  />
+    <link rel='stylesheet' href='https://unpkg.com/maplibre-gl@4.7.1/dist/maplibre-gl.css' />
     <link href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
     <link rel="stylesheet" type="text/css" href="css/style.css">
 
@@ -119,12 +119,12 @@
       <div class="panel-body">
 
         <ul>
-            <li><a href = "http://bost.ocks.org/mike/leaflet/">Mike Bostock's D3 + Leaflet</a> - The foundation for throwing geoJSON onto Leaflet with external tiles.
+            <li><a href = "http://bost.ocks.org/mike/leaflet/">Mike Bostock's D3 + Leaflet</a> - The original foundation for throwing geoJSON onto a slippy map with external tiles, adapted here for <a href = "https://maplibre.org/">MapLibre GL JS</a>.
             </li>
             <li><a href = "http://bl.ocks.org/KoGor/8163022">KoGor's Marker Animation Along SVG Path</a> - This technique made the animated cab marker work!
             </li>
             <li>
-            <a href = "http://www.mapbox.com">Mapbox</a> for super-simple subdued basemap tiles, and for releasing a totally sweet node package for converting Google Encoded Polylines into raw Coordinates.
+            <a href = "https://openfreemap.org/">OpenFreeMap</a> for the free dark basemap tiles, and <a href = "http://www.mapbox.com">Mapbox</a> for releasing a totally sweet node package for converting Google Encoded Polylines into raw Coordinates.
             </li>
             <li>
             Thanks to <a href = "http://www.reddit.com/r/bigquery/comments/28ialf/173_million_2013_nyc_taxi_rides_shared_on_bigquery/">u/fhoffa on Reddit</a> for importing the data into BigQuery helping me with the custom query I needed to pull full days of data for random taxis.
@@ -197,7 +197,7 @@
     <script src="js/moment.js"></script>
     <script src="//ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
     <script src="https://d3js.org/d3.v3.min.js"></script>
-    <script src='https://api.tiles.mapbox.com/mapbox.js/v1.6.4/mapbox.js'></script>
+    <script src='https://unpkg.com/maplibre-gl@4.7.1/dist/maplibre-gl.js'></script>
     <script src="js/script.js"></script>
 
     <script>
